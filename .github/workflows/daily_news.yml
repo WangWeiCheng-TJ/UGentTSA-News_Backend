@@ -30,6 +30,6 @@ jobs:
       - name: Run News Agent
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          MODEL_NAME: models/gemma-3-27b-it
+          MODEL_NAME: models/gemma-3-12b-it
         run: |
           python daily_news_agent.py

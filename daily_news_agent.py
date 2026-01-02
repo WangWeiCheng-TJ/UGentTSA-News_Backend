@@ -65,6 +65,31 @@ class NewsAgent:
             print(f"❌ [Sheet Error] {e}")
             self.sheet = None
 
+    def call_ai_with_retry(self, prompt, max_retries=3):
+        """
+        🛡️ 防禦性 AI 呼叫函式
+        遇到 429 (Rate Limit) 就睡覺重試，不會直接死掉。
+        """
+        if not self.model: return None
+
+        for attempt in range(max_retries):
+            try:
+                response = self.model.generate_content(prompt)
+                return response
+            except Exception as e:
+                error_msg = str(e)
+                # 如果是 429 錯誤 (Rate Limit)
+                if "429" in error_msg or "quota" in error_msg.lower():
+                    wait_time = 60 # 罰站 35 秒 (比 Google 建議的 23 秒多一點以策安全)
+                    tqdm.write(f"   ⏳ API 額度滿了，休息 {wait_time} 秒後重試 ({attempt+1}/{max_retries})...")
+                    time.sleep(wait_time)
+                else:
+                    # 如果是其他錯誤 (例如 Server Error)，稍微等一下再試
+                    tqdm.write(f"   ⚠️ AI 呼叫錯誤: {e}，重試中...")
+                    time.sleep(15)
+        
+        return None # 試了 3 次都失敗，放棄
+
     def parse_entry_date_with_ai(self, entry):
         if not self.model or not self.date_prompt_template: 
             return datetime.now()
@@ -162,7 +187,7 @@ class NewsAgent:
                 except Exception as e:
                     tqdm.write(f"❌ 寫入失敗: {e}")
             
-            time.sleep(1.0) 
+            time.sleep(2.0) 
 
         print(f"🎉 全部完成！Google Sheet 新增 {count} 筆情報。")
 

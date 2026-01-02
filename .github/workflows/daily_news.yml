@@ -1,0 +1,35 @@
+name: Daily Ghent News Agent
+
+on:
+  schedule:
+    - cron: '0 6 * * *' # 每天早上 6:00 UTC 執行
+  workflow_dispatch:      # 允許手動按鈕觸發
+
+jobs:
+  run-news-agent:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      # 🔥 關鍵步驟：把 GitHub Secret 還原成 JSON 檔案 🔥
+      - name: Create JSON key file
+        run: |
+          echo '${{ secrets.G_SHEET_JSON }}' > googlesheetapi.json
+
+      - name: Run News Agent
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          MODEL_NAME: gemini-1.5-flash
+        run: |
+          python daily_news_agent.py

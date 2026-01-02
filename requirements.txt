@@ -1,0 +1,12 @@
+requests==2.32.3
+beautifulsoup4==4.12.3
+feedparser==6.0.11
+duckduckgo-search==6.1.5
+google-generativeai==0.7.2
+pandas==2.2.2
+python-dotenv==1.0.1
+gspread==6.1.2
+google-auth==2.29.0
+lxml==5.2.1
+python-dotenv==1.0.1
+tqdm==4.66.5

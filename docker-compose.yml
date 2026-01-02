@@ -1,0 +1,18 @@
+services:
+  news-agent:
+    # 讀取當前目錄下的 Dockerfile 進行建置
+    build: .
+    container_name: ugent-news-bot
+    
+    # 掛載檔案：把本機的 service_account.json 借給容器裡面的程式用
+    # 格式是 [本機路徑]:[容器內路徑]
+    volumes:
+      - .:/app
+
+    
+    # 設定環境變數：讓容器讀取你電腦設定的 GEMINI_API_KEY
+    env_file:
+      - .env
+      
+    # 測試完畢後自動移除容器，保持乾淨
+    # remove: true (docker-compose v2 語法可能不同，這邊先省略以免報錯)

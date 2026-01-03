@@ -19,16 +19,28 @@ async function getNews() {
   }
 }
 
-// === 主頁面 (Server Component) ===
-// 這裡沒有 "use client"，所以它是伺服器組件
-export default async function Home() {
-  // 1. 在伺服器端抓好資料 (每60秒一次)
-  const newsData: NewsItem[] = await getNews();
+// 1. 定義 Props 型別，告訴 Next.js 這一頁會收到搜尋參數
+// 注意：在 Next.js 15，searchParams 是一個 Promise，必須等待
+type Props = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
 
-  // 2. 把抓到的資料 (newsData) 傳給負責顯示與互動的 MainView
+// 2. 把 searchParams 放進參數裡
+export default async function Home({ searchParams }: Props) {
+  // A. 在伺服器端抓好資料
+  const newsData = await getNews();
+
+  // B. 解析網址參數 (等待 Promise 解析)
+  const resolvedSearchParams = await searchParams;
+  
+  // C. 抓出 tab 的值，如果沒傳或格式不對，就預設用 "home"
+  const tabParam = resolvedSearchParams.tab;
+  const initialTab = typeof tabParam === 'string' ? tabParam : "home";
+
+  // D. 把 initialTab 傳給 MainView
   return (
     <main className="min-h-screen bg-gray-50 pb-24 text-gray-900">
-      <MainView initialNewsData={newsData} />
+      <MainView initialNewsData={newsData} initialTab={initialTab} />
     </main>
   );
 }

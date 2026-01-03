@@ -3,7 +3,10 @@
 import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import NewsFeed from "@/components/NewsFeed";
-import { MapPin, BookOpen, Construction } from "lucide-react";
+// 引入剛剛建立的資料
+import { guideData, appLinks } from "@/config/guideData"; 
+import { MapPin, BookOpen, ExternalLink, Phone, ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 // === 定義資料型態 ===
 export type NewsItem = {
@@ -17,87 +20,124 @@ export type NewsItem = {
   Source_URL: string;
 };
 
-// === 子頁面組件 ===
+// === 1. 指南頁面 (GuideView) ===
 const GuideView = () => (
-  <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6 space-y-4">
-    <div className="bg-blue-50 p-4 rounded-full">
-      <BookOpen size={48} className="text-blue-500" />
+  <div className="flex flex-col w-full pb-24 px-4 pt-6 space-y-6">
+    <div className="text-center space-y-2">
+      <h2 className="text-2xl font-bold text-gray-800">生存指南 🧭</h2>
+      <p className="text-gray-500 text-sm">從落地到離開的全攻略。</p>
     </div>
-    <h2 className="text-xl font-bold text-gray-800">生存指南資料庫</h2>
-    <p className="text-gray-500 max-w-xs">
-      這裡將整合舊網站的攻略，包含居留證辦理、銀行開戶與生活撇步。
-    </p>
-    <div className="px-4 py-2 bg-yellow-100 text-yellow-800 text-sm rounded-lg border border-yellow-200">
-      🚧 資料搬運中，敬請期待
+
+    <div className="space-y-6">
+      {guideData.map((section, idx) => (
+        <div key={idx} className="space-y-3">
+          <h3 className="text-lg font-bold text-blue-600 flex items-center gap-2">
+            <span className="w-1 h-5 bg-blue-600 rounded-full"></span>
+            {section.category}
+          </h3>
+          <div className="grid grid-cols-1 gap-3">
+            {section.items.map((item, itemIdx) => (
+              <Link 
+                key={itemIdx} 
+                href={item.path}
+                className="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border border-gray-100 active:scale-95 transition-transform hover:shadow-md"
+              >
+                <span className="text-gray-700 font-medium">{item.title}</span>
+                <ChevronRight size={18} className="text-gray-400" />
+              </Link>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   </div>
 );
 
-const MapView = () => (
-  <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6 space-y-4">
-    <div className="bg-green-50 p-4 rounded-full">
-      <MapPin size={48} className="text-green-500" />
+// === 2. 傳送門頁面 (PortalView) ===
+const PortalView = () => (
+  <div className="flex flex-col w-full pb-24 px-4 pt-6 space-y-8">
+    
+    {/* 🚨 緊急求救區塊 */}
+    <div className="bg-red-50 border border-red-100 rounded-2xl p-5 text-center space-y-3 shadow-sm">
+      <h3 className="text-red-800 font-bold text-lg flex items-center justify-center gap-2">
+        <Phone size={20} /> 緊急求救
+      </h3>
+      <p className="text-red-600 text-sm opacity-80">遇到緊急狀況 (救護車/消防/警察)</p>
+      <a 
+        href="tel:112" 
+        className="block w-full bg-red-600 text-white font-bold py-3 rounded-xl shadow-md active:scale-95 transition-transform"
+      >
+        撥打 112
+      </a>
     </div>
-    <h2 className="text-xl font-bold text-gray-800">根特好店地圖</h2>
-    <p className="text-gray-500 max-w-xs">
-      整合學長姐推薦的餐廳、亞超與二手店清單，點擊可直接導航。
-    </p>
-    <button className="bg-blue-600 text-white px-6 py-2 rounded-full font-bold shadow-lg shadow-blue-200 active:scale-95 transition-transform">
-      + 推薦好店 (Coming Soon)
-    </button>
+
+    {/* 🚀 外部 App 連結 */}
+    <div className="space-y-4">
+      <h3 className="text-gray-800 font-bold text-lg ml-1">根特生活必備 App</h3>
+      <div className="grid grid-cols-2 gap-4">
+        {appLinks.map((app, idx) => (
+          <a
+            key={idx}
+            href={app.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-col items-center justify-center p-4 bg-white rounded-2xl border border-gray-100 shadow-sm active:scale-95 transition-transform hover:bg-gray-50"
+          >
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl mb-2 ${app.color}`}>
+              {app.icon}
+            </div>
+            <span className="text-gray-700 font-medium text-sm">{app.name}</span>
+            <ExternalLink size={12} className="text-gray-400 mt-1" />
+          </a>
+        ))}
+      </div>
+    </div>
   </div>
 );
 
-const MoreView = () => (
-  <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6 space-y-4">
-    <div className="bg-gray-100 p-4 rounded-full">
-      <Construction size={48} className="text-gray-500" />
-    </div>
-    <h2 className="text-xl font-bold text-gray-800">更多功能</h2>
-    <p className="text-gray-500 max-w-xs">
-      包含 Google 帳號登入、設定與緊急求救系統。
-    </p>
-  </div>
-);
-
-// === 主介面組件 (Client Component) ===
-export default function MainView({ initialNewsData }: { initialNewsData: NewsItem[] }) {
-  const [currentTab, setCurrentTab] = useState("home");
-  // 這裡我們直接使用從 Server 傳過來的 initialNewsData，不需要再 fetch 了
+// === 主介面組件 ===
+// 👇👇👇 關鍵修改在這邊 👇👇👇
+export default function MainView({ 
+  initialNewsData, 
+  initialTab = "home" // 1. 設定預設值為 home
+}: { 
+  initialNewsData: NewsItem[], 
+  initialTab?: string // 2. 新增這個型別定義
+}) {
+  
+  // 3. 使用 initialTab 來初始化狀態
+  // 這樣當 URL 是 /?tab=guide 時，currentTab 就會變成 "guide"
+  const [currentTab, setCurrentTab] = useState(initialTab);
   
   return (
     <>
-      {/* 根據 currentTab 顯示對應的畫面 */}
-      
-      {/* --- 首頁 (Dashboard) --- */}
-      {currentTab === "home" && (
-        <div className="flex flex-col items-center py-8 px-4">
-           {/* 標題區 */}
-           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">🇧🇪 根特生存指南</h1>
-            <div className="flex items-center justify-center gap-2 mt-1">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-              <span className="text-xs text-gray-500">系統運作正常</span>
+      <div className="min-h-screen bg-gray-50">
+        {/* --- 1. 首頁 (News) --- */}
+        {currentTab === "home" && (
+          <div className="flex flex-col items-center py-8 px-4 pb-24">
+             <div className="text-center mb-6">
+              <h1 className="text-2xl font-bold text-gray-900">🇧🇪 根特生存指南</h1>
+              <div className="flex items-center justify-center gap-2 mt-1">
+                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span className="text-xs text-gray-500">媽祖保佑中</span>
+              </div>
+            </div>
+            <div className="w-full max-w-md">
+               <h2 className="text-sm font-bold text-gray-400 mb-3 ml-1 uppercase tracking-wider">
+                 Latest Updates
+               </h2>
+               <NewsFeed newsData={initialNewsData} />
             </div>
           </div>
-          
-          {/* 新聞列表 */}
-          <div className="w-full max-w-md">
-             <h2 className="text-sm font-bold text-gray-400 mb-3 ml-1 uppercase tracking-wider">
-              Latest Updates
-            </h2>
-            
-            <NewsFeed newsData={initialNewsData} />
-          </div>
-        </div>
-      )}
+        )}
 
-      {/* --- 其他分頁 --- */}
-      {currentTab === "guide" && <GuideView />}
-      {currentTab === "map" && <MapView />}
-      {currentTab === "more" && <MoreView />}
+        {/* --- 2. 指南 (Guide) --- */}
+        {currentTab === "guide" && <GuideView />}
 
-      {/* 底部導覽列 */}
+        {/* --- 3. 傳送門 (Portal) --- */}
+        {currentTab === "portal" && <PortalView />} 
+      </div>
+
       <BottomNav currentTab={currentTab} onTabChange={setCurrentTab} />
     </>
   );

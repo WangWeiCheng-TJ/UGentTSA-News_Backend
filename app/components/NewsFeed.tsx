@@ -21,15 +21,30 @@ const getLevelStyle = (level: string) => {
   return "bg-green-100 text-green-800 border-green-200";
 };
 
+
+// 然後 map 跑回圈的時候改跑 recentNews
+
 export default function NewsFeed({ newsData }: { newsData: NewsItem[] }) {
   // 這裡是用來記錄「現在選中了哪一則新聞」，如果是 null 代表沒選
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
+
+  // 🔥 修改 1：在這裡定義過濾邏輯 (只留 10 天內)
+  const recentNews = newsData.filter((item) => {
+    // 1. 把新聞日期轉成時間物件
+    const newsDate = new Date(item.Date);
+    // 2. 算出「10天前」的時間點
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - 10);
+    
+    // 3. 如果新聞日期 >= 10天前，就保留 (return true)
+    return newsDate >= cutoffDate;
+  });
 
   return (
     <>
       {/* === 新聞列表區 (卡片) === */}
       <div className="w-full max-w-md space-y-4">
-        {newsData.map((news, index) => (
+        {recentNews.map((news, index) => (
           <div
             key={index}
             onClick={() => setSelectedNews(news)} // 👈 點擊後，不跳轉，而是把這則新聞存起來

@@ -6,6 +6,7 @@ import NewsFeed from "@/components/NewsFeed";
 import NewsDetailModal from "@/components/NewsDetailModal";
 // 引入剛剛建立的資料
 import { guideData, appLinks } from "@/config/guideData"; 
+import PortalView from "@/components/PortalView";
 import { 
   MapPin, 
   BookOpen, 
@@ -16,6 +17,10 @@ import {
   Bell           // 👈 還有這個
 } from "lucide-react";
 import Link from "next/link";
+
+import { Info } from "lucide-react"; // 記得引入 Info
+import AboutModal from "@/components/AboutModal"; // for setting/about
+import Image from "next/image"; // 👈 記得加這行
 
 // === 定義資料型態 ===
 export type NewsItem = {
@@ -62,47 +67,6 @@ const GuideView = () => (
   </div>
 );
 
-// === 2. 傳送門頁面 (PortalView) ===
-const PortalView = () => (
-  <div className="flex flex-col w-full pb-24 px-4 pt-6 space-y-8">
-    
-    {/* 🚨 緊急求救區塊 */}
-    <div className="bg-red-50 border border-red-100 rounded-2xl p-5 text-center space-y-3 shadow-sm">
-      <h3 className="text-red-800 font-bold text-lg flex items-center justify-center gap-2">
-        <Phone size={20} /> 緊急求救
-      </h3>
-      <p className="text-red-600 text-sm opacity-80">遇到緊急狀況 (救護車/消防/警察)</p>
-      <a 
-        href="tel:112" 
-        className="block w-full bg-red-600 text-white font-bold py-3 rounded-xl shadow-md active:scale-95 transition-transform"
-      >
-        撥打 112
-      </a>
-    </div>
-
-    {/* 🚀 外部 App 連結 */}
-    <div className="space-y-4">
-      <h3 className="text-gray-800 font-bold text-lg ml-1">根特生活必備 App</h3>
-      <div className="grid grid-cols-2 gap-4">
-        {appLinks.map((app, idx) => (
-          <a
-            key={idx}
-            href={app.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-col items-center justify-center p-4 bg-white rounded-2xl border border-gray-100 shadow-sm active:scale-95 transition-transform hover:bg-gray-50"
-          >
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl mb-2 ${app.color}`}>
-              {app.icon}
-            </div>
-            <span className="text-gray-700 font-medium text-sm">{app.name}</span>
-            <ExternalLink size={12} className="text-gray-400 mt-1" />
-          </a>
-        ))}
-      </div>
-    </div>
-  </div>
-);
 
 // === 主介面組件 ===
 // 👇👇👇 關鍵修改在這邊 👇👇👇
@@ -117,8 +81,10 @@ export default function MainView({
   // 3. 使用 initialTab 來初始化狀態
   // 這樣當 URL 是 /?tab=guide 時，currentTab 就會變成 "guide"
   const [currentTab, setCurrentTab] = useState(initialTab);
-
+  // for 緊急訊息
   const [selectedAlert, setSelectedAlert] = useState<NewsItem | null>(null);
+  // for about
+  const [showAbout, setShowAbout] = useState(false);
 
   // 1️⃣ 邏輯處理：把新聞分成三級
   // 注意：Google Sheets 抓下來的 Level 可能是數字或字串，建議轉字串比對比較保險
@@ -132,12 +98,35 @@ export default function MainView({
         {/* --- 1. 首頁 (News) --- */}
         {currentTab === "home" && (
           <div className="flex flex-col items-center py-8 px-4 pb-24">
-             <div className="text-center mb-6">
-              <h1 className="text-2xl font-bold text-gray-900">🇧🇪 根特生存指南</h1>
-              <div className="flex items-center justify-center gap-2 mt-1">
-                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                <span className="text-xs text-gray-500">媽祖保佑中</span>
+            {/* Header 修改 */}
+            <div className="w-full bg-white px-4 py-4 border-b border-gray-100 mb-4 shadow-sm sticky top-0 z-10 flex justify-between items-center">
+               {/* 左邊：Logo */}
+                <div className="w-9 h-9 relative flex-shrink-0 overflow-hidden rounded-full border border-gray-100 shadow-sm">
+                  <Image 
+                    src="/logo_v3.png"   // 👈 確保 public 資料夾裡有這張圖
+                    alt="TSA Logo"
+                    fill              // 讓圖片填滿這個 w-9 h-9 的框框
+                    className="object-cover" // 或是用 object-contain (看你圖片比例)
+                    sizes="36px"
+                  />
+                </div>
+
+               {/* 中間：標題 */}
+               <div className="text-center">
+                <h1 className="text-xl font-bold text-gray-900">根特生存指南</h1>
+                <div className="flex items-center justify-center gap-2 mt-0.5">
+                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                  <span className="text-[10px] text-gray-500">媽祖保佑中</span>
+                </div>
               </div>
+
+              {/* 右邊：About 按鈕 */}
+              <button 
+                onClick={() => setShowAbout(true)}
+                className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+              >
+                <Info size={20} />
+              </button>
             </div>
             <div className="w-full max-w-md px-4 space-y-6">
               {/* 🔴 Level 3: 紅色警戒區 (有資料才顯示) */}
@@ -212,7 +201,13 @@ export default function MainView({
       </div>
 
       <BottomNav currentTab={currentTab} onTabChange={setCurrentTab} />
-      {/* 👇👇👇 就是這裡！放在最後面 👇👇👇 */}
+
+      {/* About Modal */}
+      {showAbout && (
+        <AboutModal onClose={() => setShowAbout(false)} />
+      )}
+
+      {/* Alert Modal */}
       {selectedAlert && (
         <NewsDetailModal 
           news={selectedAlert} 

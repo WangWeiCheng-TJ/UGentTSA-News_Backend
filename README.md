@@ -1,39 +1,105 @@
-# 🇧🇪 UGentTSA News Backend (根特生存指南 - 情報局)
+# UGent Taiwnese Student Association (TSA) Survior Kit (台灣人的根特生存指南)
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)
-![Gemini AI](https://img.shields.io/badge/AI-Gemini%201.5%20Flash-magenta?logo=google&logoColor=white)
+![Gemini AI](https://img.shields.io/badge/AI-Gemini%20gemma%203-magenta?logo=google&logoColor=white)
 ![Google Sheets](https://img.shields.io/badge/Database-Google%20Sheets-green?logo=google-sheets&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/Deploy-GitHub%20Actions-2088FF?logo=github-actions&logoColor=white)
+![Next.js](https://img.shields.io/badge/Frontend-Next.js-black?logo=next.js&logoColor=white)
+![Vercel](https://img.shields.io/badge/Deploy-Vercel-000000?logo=vercel&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Beta-green)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-> **「來自台灣的根特土地公」** 🏮
-> 這是一個全自動化的新聞情報系統，專為在根特生活的台灣留學生設計。它每天早上會自動抓取市政新聞，利用 AI 進行過濾、分級、翻譯，並將「真正重要」的資訊推送到資料庫中。
+> **「來自台灣的根特守護神」** 🌊
+> 
+> 剛到根特不知道超是要買什麼？突發罷工怕沒車搭？辦居留證卡關找不到攻略？
+>
+> 這是一個全自動化的數位生存系統，專為在根特渡海求學的台灣學子設計。目標是解決資訊散落在 FB 社團與 Line 群組的問題、或是隨著時代被深埋的血淚經驗；最終將「真正重要」的生存情報（市政新聞、紅色警戒、行政攻略）集中整合，期許他未來能像媽祖一樣，為在遠方打拼的遊子們點亮明燈。
 
-## 🌍 The Grand Master Plan (終極願景)
+## 🌍 The Ultimate Goal
 
-本專案是 **Ghent Survival Kit (根特生存指南)** 的第一階段核心引擎。我們的目標是打造一個「在地化、自動化、社群化」的數位生存系統。
+本專案的終極目標為打造**「台灣人在根特的生存指南」**。
 
-- [x] **Phase 1: 自動化情報局 (Current)** - 建立資料流，由 AI 自動抓取並分析新聞。
-- [ ] **Phase 2: 行動儀表板** - 建立 React PWA 前端，讓同學能秒開查詢 (Next Step)。
-- [ ] **Phase 3: 活體知識庫** - 加入 QA 論壇與糾錯機制。
-- [ ] **Phase 4: 空間生存地圖** - 整合地圖資訊 (亞洲超市、資源回收點)。
+我們的目標是建立一個「在地化、自動化、社群化」的數位生態，用以協助：
+* **新生落地**：讓剛到根特不到半年的新生，不再因為語言隔閡或資訊焦慮而無所適從。
+* **老鳥傳承**：將歷屆學長姐分散在腦海與舊網站的「生存智慧」（銀行開戶、醫療資源）系統化留存。
+* **社群互助**：創造一個低維護成本的平台，促進台灣社群在根特的資源流動。
+
+最重要的是，本專案希望以**低維護成本 (Low Maintenance)** 與 **全自動化 (Fully Automated)** 的方式運作，最大程度減少後續學生會長交接及維運的技術負擔。
+
+## 🗺️ Roadmap (發展藍圖)
+
+本專案採用迭代開發，目前專注於後端情報系統的建置。
+
+- [x] **Phase: 情報局 (Backend / Data)**
+    - 建立自動化 RSS 爬蟲與資料擷取流程，解決資訊來源問題。
+    - 串接 Gemini AI 進行語意分析、翻譯與雜訊過濾。
+    - 部署 GitHub Actions 實現每日自動更新，無需人工介入。
+
+- [ ] **Phase: 行動儀表板 (Frontend / PWA)**
+    - 開發 Next.js PWA 應用程式，解決舊網站手機瀏覽不便的問題。
+    - 實作「紅色警戒」首頁置頂：罷工通知、交通停駛 (SNCB/De Lijn) 等最痛的痛點。
+    - 實作「生活儀表板」：今日重要市政快訊。
+
+- [ ] **Phase: 活體生存指南 (Content / Wiki)**
+    - 搬運並更新歷屆傳承的行政攻略：居留證辦理、銀行開戶、離境手續 (Model 8)。
+    - 建立醫療指引：生病了如何看醫生、緊急求救電話 (112) 整合。
+    - 確保內容具有「時效性標記」，避免誤用過時資訊。
+
+- [ ] **Phase: 在地社群地圖 (Community / Map)**
+    - 整合學長姐認證的「美食地圖」與「亞洲超市」清單。
+    - 開發「資源交換」板塊：提供安全的二手買賣、房屋短租或物品出借資訊流 (取代 FB 混亂的貼文)。
+
 
 ## ⚙️ 系統架構 (System Architecture)
 
-使用 **Serverless** 與 **NoSQL (Google Sheets)** 架構(維護成本因素)。
+為了實現「減少交接負擔」的目標，我們採用 **Serverless** 與 **NoSQL (Google Sheets)** 的輕量化架構，確保營運成本為 0。
 
-[🐍 Python 爬蟲] -> (寫入資料) -> [📊 Google Sheets] -> (透過 App Script 變成 API)-> [☁️ JSON API]-> (讀取資料)-> [📱 Next.js 前端 App] -> (部署上線) -> [🚀 Vercel 雲端] ->  [👤 你的手機/電腦]
+**資料流向 (Data Flow)：**
 
-## ✨ 核心功能
-1.  **智慧日期解析**：結合規則引擎與 AI，無論荷蘭文格式如何變形 (如 `wo, 24 dec`)，都能精準還原為 `YYYY-MM-DD`。
-2.  **戰略情報分析**：AI 不只翻譯，還會擔任「情報官」，分析出：
-    * **🔴 Level 3 (紅色警戒)**：罷工、停收垃圾 (必讀)。
-    * **🟡 Level 2 (黃色實用)**：活動、市集 (建議看)。
-    * **🟢 Level 1 (綠色雜訊)**：無關緊要的市政瑣事 (過濾)。
-3.  **受眾快篩**：自動標記新聞是針對 `Student` (學生)、`Resident` (居民) 還是 `All` (所有人)。
-4.  **全自動運維**：透過 GitHub Actions 每日定時執行，完全不需要租用伺服器。
+1.  **資料源頭 (Hybrid Input)**：
+    * 🤖 **自動化管道**：`[🐍 Python 爬蟲]` 每日抓取市政新聞與紅色警戒。
+    * 🙌 **人工/靜態管道**：透過 `[Excel/CSV]` 一次性匯入舊網站攻略，或由幹部直接在 Google Sheets 上手動修訂（如美食清單、緊急電話）。
+2.  **核心儲存**：匯整至 `[📊 Google Sheets]`，這不只是資料庫，也是我們的 CMS 後台。
+3.  **API 轉換**：透過 App Script 將試算表轉換為 `[☁️ JSON API]`。
+4.  **前端讀取**：`[📱 Next.js App]` 讀取 API 並進行渲染。
+5.  **雲端部署**：程式碼託管於 `[🚀 Vercel]`，用戶透過手機瀏覽器存取。
+
+> **設計核心**：下一屆會長若需修改公告或緊急通知，只需打開 Google Sheets 修改，App 端即會同步更新，無需觸碰程式碼。
+
+### 🕵️‍♂️ 情報邏輯 (News Engine Details)
 
 <details>
-<summary>如何改動</summary>
+<summary><strong>點擊展開：查看 AI 如何分析與過濾新聞</strong></summary>
+在上述的第一步驟 (Python 爬蟲) 中，我們實作了以下邏輯來確保資訊品質：
+
+1. **智慧日期解析**
+   結合規則引擎與 AI，無論荷蘭文格式如何變形 (如 `wo, 24 dec`)，都能精準還原為 `YYYY-MM-DD`。
+
+2. **戰略情報分析 (Level 1-3)**
+   AI 不只翻譯，還會擔任「情報官」，依據 `prompts/` 的指令進行分級：
+   * 🔴 **Level 3 (紅色警戒)**：罷工、停收垃圾 (必讀，影響生活)。
+   * 🟡 **Level 2 (黃色實用)**：活動、市集 (建議看)。
+   * 🟢 **Level 1 (綠色雜訊)**：無關緊要的市政瑣事 (自動過濾或摺疊)。
+
+3. **受眾快篩**
+   自動標記新聞是針對 `Student` (學生)、`Resident` (居民) 還是 `All` (所有人)。
+
+4. **全自動運維**
+   透過 GitHub Actions 每日定時執行，完全不需要租用伺服器。
+
+</details>
+
+
+## 🤝 貢獻指南
+歡迎所有 UGENT 的台灣同學一起維護！ 如果你發現有任何問題請來信告知或是開issue。
+
+## 📜 License
+MIT License. Will be free for all Taiwanese Student Associations.
+
+## 🛠️ 開發者手冊 (Developer Manual)
+
+<details>
+<summary><strong>點擊展開：如何安裝、設定環境與部署</strong></summary>
 ## 🚀 如何開始 (Installation)
 
 如果你想在本地端開發或測試：
@@ -81,9 +147,3 @@ news_analysis.txt: 教 AI 怎麼像「土地公」一樣分析新聞重要性。
 .github/workflows/daily_news.yml: 自動化排程設定檔。<br>
 
 </details>
-
-## 🤝 貢獻指南
-歡迎所有 UGENT 的台灣同學一起維護！ 如果你發現 AI 分類不準，請直接修改 prompts/news_analysis.txt 並發送 Pull Request。
-
-## 📜 License
-MIT License. Free for all Taiwanese Student Associations.

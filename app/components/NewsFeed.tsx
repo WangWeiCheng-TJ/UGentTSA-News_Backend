@@ -28,25 +28,30 @@ export default function NewsFeed({ newsData }: { newsData: NewsItem[] }) {
   // 這裡是用來記錄「現在選中了哪一則新聞」，如果是 null 代表沒選
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
 
-  // 🔥 修改重點：過濾邏輯 (5天內 OR 最新5篇)
-  const recentNews = newsData.filter((item) => {
+  // 0. 預處理：確保資料一定是「由新到舊」排序
+  // 這是為了防止 Google Sheet 資料順序亂掉，導致 slice 抓到舊新聞
+  const sortedNews = [...newsData].sort((a, b) => {
+    return new Date(b.Date).getTime() - new Date(a.Date).getTime();
+  });
+
+   // 1. 先試著找出「最近 5 天」的新聞
+  const recentNews = sortedNews.filter((item) => {
     const newsDate = new Date(item.Date);
     const cutoffDate = new Date();
-    cutoffDate.setDate(cutoffDate.getDate() - 5); // 設定為 5 天前
+    cutoffDate.setDate(cutoffDate.getDate() - 5); // 5天前
     return newsDate >= cutoffDate;
-  })
-  .slice(0, 5); // 最多只拿 5 篇
+  });
 
-  // 💡 保底機制：如果 "5天內" 完全沒新聞，為了不讓首頁開天窗，
-  // 我們至少抓 "最新的一篇" 來顯示 (不管日期)。
-  // 如果你有 "置頂公告" 的需求，也可以在這裡處理。
-  const displayNews = recentNews.length > 0 ? recentNews : newsData.slice(0, 1);
+  // 2. 決定最終要顯示哪些新聞
+  // 邏輯：如果有 "最近的新聞"，就顯示最近的；
+  //       如果 "最近的" 是空的 (0筆)，那就直接拿資料庫裡 "最新的 5 筆" (不管日期)
+  const displayNews = recentNews.length > 0 ? recentNews : sortedNews.slice(0, 5);
 
   return (
     <>
       {/* === 新聞列表區 (卡片) === */}
       <div className="w-full max-w-md space-y-4">
-        {recentNews.map((news, index) => (
+        {displayNews.map((news, index) => (
           <div
             key={index}
             onClick={() => setSelectedNews(news)} // 👈 點擊後，不跳轉，而是把這則新聞存起來

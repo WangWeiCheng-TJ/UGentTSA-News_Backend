@@ -86,7 +86,7 @@ export default function Home() {
 
       {/* 底部 Footer */}
       <footer className="mt-12 text-center text-xs text-gray-400 pb-8">
-        <p>UGent TSA x Ghent Land God 🏮</p>
+        <p>UGent TSA</p>
         <p className="mt-1">Built with Next.js & Python</p>
       </footer>
     </main>

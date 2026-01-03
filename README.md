@@ -21,19 +21,7 @@
 
 使用 **Serverless** 與 **NoSQL (Google Sheets)** 架構(維護成本因素)。
 
-```mermaid
-graph TD
-    A[📡 Stad Gent RSS] -->|每日 07:00 UTC+1| B(🤖 GitHub Actions)
-    subgraph "Backend Agent (Python)"
-        B -->|1. 抓取資料| C{🔍 過濾器}
-        C -->|過期/重複| D[🗑️ 丟棄]
-        C -->|新資料| E[🧠 Gemini AI 分析]
-        E -->|判讀日期| E1[Date Parsing]
-        E -->|內容分級| E2[Content Analysis]
-    end
-    E2 -->|寫入| F[(📊 Google Sheets)]
-    F -->|JSON API| G[📱 前端 App (Phase 2)]
-```
+[🐍 Python 爬蟲] -> (寫入資料) -> [📊 Google Sheets] -> (透過 App Script 變成 API)-> [☁️ JSON API]-> (讀取資料)-> [📱 Next.js 前端 App] -> (部署上線) -> [🚀 Vercel 雲端] ->  [👤 你的手機/電腦]
 
 ## ✨ 核心功能
 1.  **智慧日期解析**：結合規則引擎與 AI，無論荷蘭文格式如何變形 (如 `wo, 24 dec`)，都能精準還原為 `YYYY-MM-DD`。

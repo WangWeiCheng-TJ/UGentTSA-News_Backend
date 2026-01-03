@@ -36,13 +36,14 @@ export const guideData: GuideCategory[] = [
   {
     category: "🚲 日常生活 (Daily Life)",
     items: [
+      { title: "延長居留&變更地址", path: "/guide/visa-address" },
       { title: "好康相報 (優惠)", path: "/guide/deals" },
       { title: "交通篇 (腳踏車/電車)", path: "/guide/transport-city" },
       { title: "健保與醫療", path: "/guide/healthcare" },
       { title: "網購與包裹", path: "/guide/online-shopping" },
       { title: "超市攻略", path: "/guide/supermarkets" },
       { title: "實用 App 清單", path: "/guide/apps" },
-      { title: "其他文件申辦", path: "/guide/documents" }
+      { title: "其他行政手續", path: "/guide/documents" },      
     ]
   },
   {

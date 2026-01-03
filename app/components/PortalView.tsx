@@ -10,17 +10,18 @@ import {
   Fingerprint,
   Utensils, 
   Info,
-  Siren,      // 警報器
-  PhoneOff,   // 掛失電話
-  ShieldAlert // 證件掛失
+  Siren,
+  PhoneOff,
+  ShieldAlert,
+  Download // 👈 記得引入這個 icon
 } from "lucide-react";
 
 // 定義資料結構
 type AppLinks = {
-  scheme: string; // 暴力啟動 (Deep Link)
-  android: string; // Play Store
-  ios: string;     // App Store
-  web: string;     // 電腦版/備用官網
+  scheme: string; // iOS 用的 Scheme (例如 itsme://)
+  packageId: string; // Android 用的 Package ID (例如 be.bmid.itsme)
+  iosStoreId: string; // iOS App Store ID (備用)
+  web: string; // 電腦版
 };
 
 type LinkItem = {
@@ -28,7 +29,7 @@ type LinkItem = {
   icon: React.ReactNode;
   desc?: string;
   links: AppLinks;
-  isEmergency?: boolean; // 標記是否為緊急按鈕
+  isEmergency?: boolean;
 };
 
 type Section = {
@@ -38,9 +39,8 @@ type Section = {
 
 export default function PortalView() {
   
-  // 📥 資料庫
+  // 📥 資料庫：這裡補上了 packageId
   const linksData: Section[] = [
-    // 🆘 1. 緊急救援 (視覺保留，功能鎖定)
     {
       category: "🆘 緊急救援 (尚未實裝)",
       items: [
@@ -49,25 +49,24 @@ export default function PortalView() {
           icon: <Siren size={24} className="text-white" />,
           desc: "警察、消防、救護",
           isEmergency: true,
-          links: { scheme: "", android: "", ios: "", web: "" } // 空連結
+          links: { scheme: "", packageId: "", iosStoreId: "", web: "" }
         },
         {
           title: "Card Stop",
           icon: <PhoneOff size={24} className="text-red-600" />,
           desc: "掛失銀行卡",
           isEmergency: true,
-          links: { scheme: "", android: "", ios: "", web: "" }
+          links: { scheme: "", packageId: "", iosStoreId: "", web: "" }
         },
         {
           title: "Doc Stop",
           icon: <ShieldAlert size={24} className="text-orange-600" />,
           desc: "掛失護照/ID",
           isEmergency: true,
-          links: { scheme: "", android: "", ios: "", web: "" }
+          links: { scheme: "", packageId: "", iosStoreId: "", web: "" }
         }
       ]
     },
-    // 📲 2. 數位神器
     {
       category: "📲 必備數位神器",
       items: [
@@ -77,8 +76,8 @@ export default function PortalView() {
           desc: "掃QR code付款",
           links: {
             scheme: "pbyb://",
-            android: "https://play.google.com/store/apps/details?id=mobi.intix.android",
-            ios: "https://apps.apple.com/be/app/payconiq-by-bancontact/id1049475711",
+            packageId: "mobi.intix.android",
+            iosStoreId: "id1049475711",
             web: "https://www.payconiq.be/en"
           }
         },
@@ -88,14 +87,13 @@ export default function PortalView() {
           desc: "數位身分證",
           links: {
             scheme: "itsme://",
-            android: "https://play.google.com/store/apps/details?id=be.bmid.itsme",
-            ios: "https://apps.apple.com/be/app/itsme/id1189354248",
+            packageId: "be.bmid.itsme",
+            iosStoreId: "id1189354248",
             web: "https://www.itsme-id.com/"
           }
         },
       ]
     },
-    // 🚋 3. 交通
     {
       category: "🚋 交通出行",
       items: [
@@ -105,8 +103,8 @@ export default function PortalView() {
           desc: "查時刻、買車票",
           links: {
             scheme: "sncb://",
-            android: "https://play.google.com/store/apps/details?id=be.sncb.mobile",
-            ios: "https://apps.apple.com/be/app/sncb-international/id1256087965",
+            packageId: "be.sncb.mobile",
+            iosStoreId: "id1256087965",
             web: "https://www.belgiantrain.be/"
           }
         },
@@ -116,14 +114,13 @@ export default function PortalView() {
           desc: "公車、路面電車",
           links: {
             scheme: "delijn://",
-            android: "https://play.google.com/store/apps/details?id=be.delijn.mobile.android.widget",
-            ios: "https://apps.apple.com/be/app/de-lijn/id403016913",
+            packageId: "be.delijn.mobile.android.widget",
+            iosStoreId: "id403016913",
             web: "https://www.delijn.be/"
           }
         },
       ]
     },
-    // 🛒 4. 生活與省錢
     {
       category: "🛒 生活與省錢",
       items: [
@@ -133,8 +130,8 @@ export default function PortalView() {
           desc: "減少浪費(i珍食)",
           links: {
             scheme: "tgtg://",
-            android: "https://play.google.com/store/apps/details?id=com.app.tgtg",
-            ios: "https://apps.apple.com/be/app/too-good-to-go-end-food-waste/id1060683933",
+            packageId: "com.app.tgtg",
+            iosStoreId: "id1060683933",
             web: "https://www.toogoodtogo.com/"
           }
         },
@@ -144,8 +141,8 @@ export default function PortalView() {
           desc: "折扣券 App",
           links: {
             scheme: "lidlplus://",
-            android: "https://play.google.com/store/apps/details?id=com.lidl.eci.lidl.plus",
-            ios: "https://apps.apple.com/be/app/lidl-plus/id1235061864",
+            packageId: "com.lidl.eci.lidl.plus",
+            iosStoreId: "id1235061864",
             web: "https://www.lidl.be/"
           }
         },
@@ -155,8 +152,8 @@ export default function PortalView() {
           desc: "荷蘭超市",
           links: {
             scheme: "ah://",
-            android: "https://play.google.com/store/apps/details?id=com.ah.appie",
-            ios: "https://apps.apple.com/be/app/albert-heijn-supermarkt/id381483863",
+            packageId: "com.ah.appie",
+            iosStoreId: "id381483863",
             web: "https://www.ah.be/"
           }
         },
@@ -166,8 +163,8 @@ export default function PortalView() {
           desc: "便宜大碗",
           links: {
             scheme: "xtra://",
-            android: "https://play.google.com/store/apps/details?id=be.colruyt.xtra",
-            ios: "https://apps.apple.com/be/app/xtra/id1066060372",
+            packageId: "be.colruyt.xtra",
+            iosStoreId: "id1066060372",
             web: "https://www.okay.be/"
           }
         },
@@ -177,8 +174,8 @@ export default function PortalView() {
           desc: "生鮮超市",
           links: {
             scheme: "delhaize://",
-            android: "https://play.google.com/store/apps/details?id=be.delhaize.my",
-            ios: "https://apps.apple.com/be/app/my-delhaize/id483562366",
+            packageId: "be.delhaize.my",
+            iosStoreId: "id483562366",
             web: "https://www.delhaize.be/"
           }
         },
@@ -188,8 +185,8 @@ export default function PortalView() {
           desc: "生活雜貨",
           links: {
             scheme: "action://",
-            android: "https://play.google.com/store/apps/details?id=com.action.app",
-            ios: "https://apps.apple.com/be/app/action/id1526978189",
+            packageId: "com.action.app",
+            iosStoreId: "id1526978189",
             web: "https://www.action.com/nl-be/"
           }
         },
@@ -197,49 +194,50 @@ export default function PortalView() {
     }
   ];
 
-  // 🚀 核心功能：智慧啟動器
-  const handleSmartClick = (item: LinkItem) => {
-    // 🔒 0. 如果是緊急按鈕 -> 攔截！不執行動作
+  // 🚀 核心功能：使用 Android Intent 與 iOS Scheme
+  const handleSmartClick = (item: LinkItem, mode: 'open' | 'download') => {
     if (item.isEmergency) {
-      alert(`🚧 【${item.title}】功能尚未開放\n(This feature is not yet implemented)`);
+      alert(`🚧 【${item.title}】功能尚未開放...`);
       return;
     }
 
     const { links } = item;
-    
-    // 1. 偵測環境
     const userAgent = navigator.userAgent || navigator.vendor;
     const isAndroid = /android/i.test(userAgent);
     const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream;
 
-    // 2. 電腦版 -> 開網頁
+    // 0. 電腦版 -> 一律開網頁
     if (!isAndroid && !isIOS) {
       window.open(links.web, '_blank');
       return;
     }
 
-    // 3. 準備連結
-    const fallbackStore = isAndroid ? links.android : links.ios;
-    const start = Date.now();
-    
-    // 4. 暴力啟動
-    window.location.href = links.scheme;
+    // 1. 如果使用者明確點擊了「下載」按鈕
+    if (mode === 'download') {
+      const storeUrl = isAndroid 
+        ? `https://play.google.com/store/apps/details?id=${links.packageId}`
+        : `https://apps.apple.com/be/app/${links.iosStoreId}`;
+      window.location.href = storeUrl;
+      return;
+    }
 
-// 5. 延遲判斷 (加長到 2500ms)
-    setTimeout(() => {
-      // 關鍵修改：檢查頁面是否「被隱藏」了
-      // 如果 App 成功開啟，瀏覽器通常會變成 'hidden' 狀態
-      // 我們只在頁面「還看得到 (visible)」的時候才跳轉商店
-      if (!document.hidden) {
-        // 二次確認：用 confirm 讓使用者選擇，而不是強制跳轉 (體驗較好)
-        const userWantsStore = confirm(
-          `無法自動開啟 ${item.title} App。\n要前往商店下載嗎？`
-        );
-        if (userWantsStore) {
-          window.location.href = fallbackStore;
-        }
-      }
-    }, 2500);
+    // 2. 安卓流派 (Android Intent) - 業界標準做法
+    // 格式：intent://<scheme>#Intent;scheme=<scheme>;package=<packageId>;S.browser_fallback_url=<storeUrl>;end
+    // 效果：有裝->開App，沒裝->去商店。OS 自己判斷，不用 JS。
+    if (isAndroid) {
+      // 移除 scheme 結尾的 :// (例如 itsme:// 變成 itsme)
+      const cleanScheme = links.scheme.replace('://', '');
+      const intentUrl = `intent://${cleanScheme}#Intent;scheme=${cleanScheme};package=${links.packageId};S.browser_fallback_url=https://play.google.com/store/apps/details?id=${links.packageId};end`;
+      
+      window.location.href = intentUrl;
+      return;
+    }
+
+    // 3. 蘋果流派 (iOS Scheme)
+    // 移除所有自動偵測，直接嘗試開啟。失敗就算了，讓使用者自己點下載。
+    if (isIOS) {
+      window.location.href = links.scheme;
+    }
   };
 
   return (
@@ -248,7 +246,9 @@ export default function PortalView() {
       {/* Header */}
       <div className="w-full bg-white px-4 py-6 border-b border-gray-100 mb-4 shadow-sm sticky top-0 z-10">
         <h1 className="text-2xl font-bold text-gray-900 text-center">🚀 任意門</h1>
-        <p className="text-center text-xs text-gray-400 mt-1">常用工具 & App 速查</p>
+        <p className="text-center text-xs text-gray-400 mt-1">
+          點擊卡片開啟 App，若無反應請點角落下載
+        </p>
       </div>
 
       {/* 提示區塊 */}
@@ -257,10 +257,10 @@ export default function PortalView() {
           <Info className="text-blue-600 shrink-0 mt-0.5" size={18} />
           <div>
             <h3 className="text-xs font-bold text-blue-800 mb-1">
-              使用小撇步
+              Android 用戶免煩惱
             </h3>
             <p className="text-[11px] text-blue-600 leading-relaxed">
-              點擊按鈕將嘗試開啟手機 App。若未安裝，將自動跳轉至商店下載。
+              Android 系統會自動偵測並導向。iOS 若點擊無反應，請按卡片右上角的下載圖示。
             </p>
           </div>
         </div>
@@ -275,39 +275,55 @@ export default function PortalView() {
             </h2>
             <div className="grid grid-cols-2 gap-3">
               {section.items.map((link, linkIdx) => (
-                <button
-                  key={linkIdx}
-                  onClick={() => handleSmartClick(link)}
-                  className={`p-4 rounded-xl border shadow-sm transition-all active:scale-95 flex flex-col items-center text-center gap-2 group cursor-pointer w-full
-                    ${/* 視覺效果：緊急按鈕保持紅色，但無功能 */ 
-                      link.isEmergency && link.title.includes("112")
-                      ? "bg-red-500 border-red-600 shadow-red-200" 
-                      : "bg-white border-gray-100 hover:shadow-md hover:border-blue-200"
-                    }
-                  `}
-                >
-                  <div className={`p-3 rounded-full transition-colors
-                    ${/* 視覺效果：Icon 樣式 */
-                      link.isEmergency && link.title.includes("112")
-                      ? "bg-white/20 text-white" 
-                      : "bg-gray-50 group-hover:bg-blue-50"
-                    }
-                  `}>
-                    {link.icon}
-                  </div>
-                  <div>
-                    <h3 className={`font-bold text-sm
-                       ${link.isEmergency && link.title.includes("112") ? "text-white" : "text-gray-800"}
+                <div key={linkIdx} className="relative group">
+                  
+                  {/* 主要按鈕 (開啟 App) */}
+                  <button
+                    onClick={() => handleSmartClick(link, 'open')}
+                    className={`p-4 rounded-xl border shadow-sm transition-all active:scale-95 flex flex-col items-center text-center gap-2 cursor-pointer w-full h-full
+                      ${link.isEmergency && link.title.includes("112")
+                        ? "bg-red-500 border-red-600 shadow-red-200" 
+                        : "bg-white border-gray-100 hover:shadow-md hover:border-blue-200"
+                      }
+                    `}
+                  >
+                    <div className={`p-3 rounded-full transition-colors
+                      ${link.isEmergency && link.title.includes("112")
+                        ? "bg-white/20 text-white" 
+                        : "bg-gray-50 group-hover:bg-blue-50"
+                      }
                     `}>
-                      {link.title}
-                    </h3>
-                    <p className={`text-[10px] mt-1
-                       ${link.isEmergency && link.title.includes("112") ? "text-red-100" : "text-gray-400"}
-                    `}>
-                      {link.desc}
-                    </p>
-                  </div>
-                </button>
+                      {link.icon}
+                    </div>
+                    <div>
+                      <h3 className={`font-bold text-sm
+                         ${link.isEmergency && link.title.includes("112") ? "text-white" : "text-gray-800"}
+                      `}>
+                        {link.title}
+                      </h3>
+                      <p className={`text-[10px] mt-1
+                         ${link.isEmergency && link.title.includes("112") ? "text-red-100" : "text-gray-400"}
+                      `}>
+                        {link.desc}
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* 右上角下載小按鈕 (緊急按鈕不顯示) */}
+                  {!link.isEmergency && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); // 防止觸發大按鈕
+                        handleSmartClick(link, 'download');
+                      }}
+                      className="absolute top-2 right-2 p-1.5 bg-gray-100 rounded-full text-gray-400 hover:bg-blue-100 hover:text-blue-600 transition-colors z-10"
+                      title="去商店下載"
+                    >
+                      <Download size={14} />
+                    </button>
+                  )}
+                  
+                </div>
               ))}
             </div>
           </div>

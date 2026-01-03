@@ -24,32 +24,32 @@ export const guideData: GuideCategory[] = [
   {
     category: "🌱 初來乍到 (Arrival)",
     items: [
-      { title: "要出發啦", path: "/guide/departure-prep" },
-      { title: "如何來根特", path: "/guide/transport-to-ghent" },
+      { title: "要出發啦(tbd)", path: "/guide/departure-prep" },
+      { title: "如何來根特(tbd)", path: "/guide/transport-to-ghent" },
       { title: "居留證篇 (市政廳)", path: "/guide/residence-permit" },
-      { title: "住宿篇 (Kot & Studio)", path: "/guide/housing" },
-      { title: "電信與網路", path: "/guide/telecom" },
+      { title: "住宿篇 (tbd)", path: "/guide/housing" },
+      { title: "電信與網路(tbd)", path: "/guide/telecom" },
       { title: "銀行開戶", path: "/guide/banking" },
-      { title: "ESN 學生組織", path: "/guide/esn" }
+      { title: "ESN 學生組織(tbd)", path: "/guide/esn" }
     ]
   },
   {
     category: "🚲 日常生活 (Daily Life)",
     items: [
-      { title: "延長居留&變更地址", path: "/guide/visa-address" },
-      { title: "好康相報 (優惠)", path: "/guide/deals" },
-      { title: "交通篇 (腳踏車/電車)", path: "/guide/transport-city" },
-      { title: "健保與醫療", path: "/guide/healthcare" },
-      { title: "網購與包裹", path: "/guide/online-shopping" },
-      { title: "超市攻略", path: "/guide/supermarkets" },
-      { title: "實用 App 清單", path: "/guide/apps" },
-      { title: "其他行政手續", path: "/guide/documents" },      
+      { title: "延長居留&變更地址(tbd)", path: "/guide/visa-address" },
+      { title: "好康相報 (tbd)", path: "/guide/deals" },
+      { title: "交通篇 (tbd)", path: "/guide/transport-city" },
+      { title: "健保與醫療 (tbd)", path: "/guide/healthcare" },
+      { title: "網購與包裹 (tbd)", path: "/guide/online-shopping" },
+      { title: "超市攻略 (tbd)", path: "/guide/supermarkets" },
+      { title: "實用 App 清單 ", path: "/guide/apps" },
+      { title: "其他行政手續 (tbd)", path: "/guide/documents" },      
     ]
   },
   {
     category: "👋 回台灣囉 (Departure)",
     items: [
-      { title: "必要手續 (Model 8)", path: "/guide/leaving-ghent" }
+      { title: "必要手續 (tbd)", path: "/guide/leaving-ghent" }
     ]
   }
 ];

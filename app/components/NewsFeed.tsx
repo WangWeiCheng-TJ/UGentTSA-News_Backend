@@ -28,17 +28,19 @@ export default function NewsFeed({ newsData }: { newsData: NewsItem[] }) {
   // 這裡是用來記錄「現在選中了哪一則新聞」，如果是 null 代表沒選
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
 
-  // 🔥 修改 1：在這裡定義過濾邏輯 (只留 10 天內)
+  // 🔥 修改重點：過濾邏輯 (5天內 OR 最新5篇)
   const recentNews = newsData.filter((item) => {
-    // 1. 把新聞日期轉成時間物件
     const newsDate = new Date(item.Date);
-    // 2. 算出「10天前」的時間點
     const cutoffDate = new Date();
-    cutoffDate.setDate(cutoffDate.getDate() - 10);
-    
-    // 3. 如果新聞日期 >= 10天前，就保留 (return true)
+    cutoffDate.setDate(cutoffDate.getDate() - 5); // 設定為 5 天前
     return newsDate >= cutoffDate;
-  });
+  })
+  .slice(0, 5); // 最多只拿 5 篇
+
+  // 💡 保底機制：如果 "5天內" 完全沒新聞，為了不讓首頁開天窗，
+  // 我們至少抓 "最新的一篇" 來顯示 (不管日期)。
+  // 如果你有 "置頂公告" 的需求，也可以在這裡處理。
+  const displayNews = recentNews.length > 0 ? recentNews : newsData.slice(0, 1);
 
   return (
     <>

@@ -3,9 +3,18 @@
 import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import NewsFeed from "@/components/NewsFeed";
+import NewsDetailModal from "@/components/NewsDetailModal";
 // 引入剛剛建立的資料
 import { guideData, appLinks } from "@/config/guideData"; 
-import { MapPin, BookOpen, ExternalLink, Phone, ChevronRight } from "lucide-react";
+import { 
+  MapPin, 
+  BookOpen, 
+  ExternalLink, 
+  Phone, 
+  ChevronRight, 
+  AlertTriangle, // 👈 補上這個
+  Bell           // 👈 還有這個
+} from "lucide-react";
 import Link from "next/link";
 
 // === 定義資料型態 ===
@@ -108,6 +117,14 @@ export default function MainView({
   // 3. 使用 initialTab 來初始化狀態
   // 這樣當 URL 是 /?tab=guide 時，currentTab 就會變成 "guide"
   const [currentTab, setCurrentTab] = useState(initialTab);
+
+  const [selectedAlert, setSelectedAlert] = useState<NewsItem | null>(null);
+
+  // 1️⃣ 邏輯處理：把新聞分成三級
+  // 注意：Google Sheets 抓下來的 Level 可能是數字或字串，建議轉字串比對比較保險
+  const redAlerts = initialNewsData.filter(item => String(item.Level) === "3");
+  const pinnedNews = initialNewsData.filter(item => String(item.Level) === "2");
+  const normalNews = initialNewsData.filter(item => String(item.Level) === "1" || !item.Level); // Level 1 或沒填的
   
   return (
     <>
@@ -122,11 +139,67 @@ export default function MainView({
                 <span className="text-xs text-gray-500">媽祖保佑中</span>
               </div>
             </div>
-            <div className="w-full max-w-md">
-               <h2 className="text-sm font-bold text-gray-400 mb-3 ml-1 uppercase tracking-wider">
-                 Latest Updates
-               </h2>
-               <NewsFeed newsData={initialNewsData} />
+            <div className="w-full max-w-md px-4 space-y-6">
+              {/* 🔴 Level 3: 紅色警戒區 (有資料才顯示) */}
+              {redAlerts.length > 0 && (
+                <div className="space-y-3">
+                  {redAlerts.map((alert, idx) => (
+                    <div key={idx} 
+                    onClick={() => setSelectedAlert(alert)}
+                    className="bg-red-500 text-white p-4 rounded-xl shadow-lg flex gap-3 animate-pulse cursor-pointer hover:shadow-md transition-all active:scale-95">
+                      <AlertTriangle className="shrink-0" size={24} />
+                      <div>
+                        <h3 className="font-bold text-lg leading-tight">{alert.Title}</h3>
+                        <p className="text-red-50 text-sm mt-1">{alert.Summary}</p>
+                        {alert.Source_URL && (
+                          <a href={alert.Source_URL} target="_blank" className="inline-block mt-2 text-xs bg-white/20 px-2 py-1 rounded hover:bg-white/30 transition">
+                            查看詳情 →
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* 🟡 Level 2: 置頂消息區 (有資料才顯示) */}
+              {pinnedNews.length > 0 && (
+                <div className="space-y-2">
+                  <h2 className="text-sm font-bold text-gray-400 ml-1 uppercase tracking-wider flex items-center gap-1">
+                    <Bell size={14} /> Pinned Updates
+                  </h2>
+                  {pinnedNews.map((news, idx) => (
+                    <div key={idx} 
+                    onClick={() => setSelectedAlert(news)}
+                    className="bg-blue-50 border border-blue-100 p-4 rounded-xl shadow-sm cursor-pointer hover:shadow-md hover:bg-blue-100/50 transition-all active:scale-95"
+                    >
+                      <div className="flex justify-between items-start mb-1">
+                        <span className="bg-blue-200 text-blue-700 text-[10px] px-2 py-0.5 rounded-full font-bold">
+                          {news.Topic}
+                        </span>
+                        <span className="text-xs text-blue-400">{news.Date.split('T')[0]}</span>
+                      </div>
+                      <h3 className="font-bold text-gray-800 text-lg">{news.Title}</h3>
+                      <p className="text-gray-600 text-sm mt-1 line-clamp-2">{news.Summary}</p>
+                      {news.Action && (
+                         <div className="mt-3 pt-3 border-t border-blue-100 text-blue-600 text-sm font-medium flex items-center gap-1">
+                           {news.Action} <ChevronRight size={14} />
+                         </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* ⚪ Level 1: 一般動態 (原本的 Feed) */}
+              <div className="space-y-2">
+                <h2 className="text-sm font-bold text-gray-400 ml-1 uppercase tracking-wider cursor-pointer hover:shadow-md transition-all active:scale-95">
+                   Latest Feed
+                </h2>
+                {/* 這裡直接用原本的 NewsFeed，但只傳入一般新聞 */}
+                <NewsFeed newsData={normalNews} />
+              </div>
+
             </div>
           </div>
         )}
@@ -139,6 +212,14 @@ export default function MainView({
       </div>
 
       <BottomNav currentTab={currentTab} onTabChange={setCurrentTab} />
+      {/* 👇👇👇 就是這裡！放在最後面 👇👇👇 */}
+      {selectedAlert && (
+        <NewsDetailModal 
+          news={selectedAlert} 
+          onClose={() => setSelectedAlert(null)} 
+        />
+      )}
+
     </>
   );
 }

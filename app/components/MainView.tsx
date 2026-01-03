@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BottomNav from "@/components/BottomNav";
 import NewsFeed from "@/components/NewsFeed";
 import NewsDetailModal from "@/components/NewsDetailModal";
@@ -81,6 +81,27 @@ export default function MainView({
   // 3. 使用 initialTab 來初始化狀態
   // 這樣當 URL 是 /?tab=guide 時，currentTab 就會變成 "guide"
   const [currentTab, setCurrentTab] = useState(initialTab);
+  // 2. 👇 新增這段 useEffect：讀取記憶 👇
+  useEffect(() => {
+    // 只有當 initialTab 是預設值 "home" 時，我們才去讀取 localStorage
+    // 這樣如果使用者是點了分享連結進來 (e.g. ?tab=guide)，就不會被蓋掉
+    if (initialTab === "home") {
+      const savedTab = localStorage.getItem("tsa_active_tab");
+      if (savedTab) {
+        setCurrentTab(savedTab);
+      }
+    } else {
+      // 如果使用者是從特定連結進來，我們把那個連結存起來
+      localStorage.setItem("tsa_active_tab", initialTab);
+    }
+  }, [initialTab]); 
+
+  // 3. 👇 修改切換函式：加入存檔功能 👇
+  const handleTabChange = (tab: string) => {
+    setCurrentTab(tab);
+    localStorage.setItem("tsa_active_tab", tab); // 記住這個選擇！
+  };
+
   // for 緊急訊息
   const [selectedAlert, setSelectedAlert] = useState<NewsItem | null>(null);
   // for about
@@ -200,7 +221,7 @@ export default function MainView({
         {currentTab === "portal" && <PortalView />} 
       </div>
 
-      <BottomNav currentTab={currentTab} onTabChange={setCurrentTab} />
+      <BottomNav currentTab={currentTab} onTabChange={handleTabChange} />
 
       {/* About Modal */}
       {showAbout && (

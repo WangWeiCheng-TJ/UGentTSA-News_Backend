@@ -225,13 +225,21 @@ export default function PortalView() {
     // 4. 暴力啟動
     window.location.href = links.scheme;
 
-    // 5. 倒數計時
+// 5. 延遲判斷 (加長到 2500ms)
     setTimeout(() => {
-      const elapsed = Date.now() - start;
-      if (elapsed < 2000) {
-         window.location.href = fallbackStore;
+      // 關鍵修改：檢查頁面是否「被隱藏」了
+      // 如果 App 成功開啟，瀏覽器通常會變成 'hidden' 狀態
+      // 我們只在頁面「還看得到 (visible)」的時候才跳轉商店
+      if (!document.hidden) {
+        // 二次確認：用 confirm 讓使用者選擇，而不是強制跳轉 (體驗較好)
+        const userWantsStore = confirm(
+          `無法自動開啟 ${item.title} App。\n要前往商店下載嗎？`
+        );
+        if (userWantsStore) {
+          window.location.href = fallbackStore;
+        }
       }
-    }, 1500);
+    }, 2500);
   };
 
   return (

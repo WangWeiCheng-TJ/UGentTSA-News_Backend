@@ -7,6 +7,7 @@ const withPWA = require("@ducanh2912/next-pwa").default({
   aggressiveFrontEndNavCaching: true,
   reloadOnOnline: true, // 網路恢復時重新整理
   swcMinify: true,
+  skipWaiting: true, // 下載完新版，立刻替換舊版
   disable: process.env.NODE_ENV === "development", // 開發模式下不啟用 PWA (不然很煩)
   workboxOptions: {
     disableDevLogs: true,

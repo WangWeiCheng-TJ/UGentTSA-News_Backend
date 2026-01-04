@@ -25,10 +25,10 @@ export const guideData: GuideCategory[] = [
     category: "🌱 初來乍到 (Arrival)",
     items: [
       { title: "行前文件準備", path: "/guide/departure-prep" },
-      { title: "帶與不帶(tbd)", path: "/guide/departure-luggage" },
-      { title: "如何來根特(tbd)", path: "/guide/transport-to-ghent" },
+      { title: "To帶 or not to帶(tbd)", path: "/guide/departure-luggage" },
+      { title: "如何來根特", path: "/guide/transport-to-ghent" },
       { title: "居留證篇", path: "/guide/residence-permit" },
-      { title: "住宿篇 (tbd)", path: "/guide/housing" },
+      { title: "住宿篇", path: "/guide/housing" },
       { title: "電信與網路(tbd)", path: "/guide/telecom" },
       { title: "銀行開戶", path: "/guide/banking" },
       { title: "ESN 學生組織(tbd)", path: "/guide/esn" }

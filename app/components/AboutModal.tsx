@@ -44,7 +44,7 @@ export default function AboutModal({ onClose }: Props) {
             />
           </div>
           <h2 className="text-xl font-bold tracking-tight">根特生存指南</h2>
-          <p className="text-blue-100 text-sm opacity-90">UGent TSA App (beta)</p>
+          <p className="text-blue-100 text-sm opacity-90">TW@Ghent Survival Kit (beta)</p>
         </div>
 
         {/* Content */}
@@ -67,7 +67,7 @@ export default function AboutModal({ onClose }: Props) {
                 <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-xs">👨‍💻</div>
                 <div>
                   <p className="text-sm font-bold text-gray-800">內容提供</p>
-                  <p className="text-xs text-gray-500">王偉丞、林經緯、蘇盟慧、羅傑、眾多前輩們</p>
+                  <p className="text-xs text-gray-500">王偉丞、林經緯、蘇盟惠、羅傑、眾多前輩們</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-lg border border-gray-100/50">

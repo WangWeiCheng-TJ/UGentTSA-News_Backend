@@ -100,6 +100,17 @@
 
 ## 🤝 貢獻指南
 歡迎所有 UGENT 的台灣同學一起維護！ 如果你發現有任何問題請來信告知或是開issue。
+<details>
+<summary><strong>點擊展開：如何貢獻/更新資料(管理者)</strong></summary>
+主要由管理員從tsa的google帳號操作：
+
+將要修訂的資料整理好(可以用LLM整理)後，轉成Markdown格式
+建議Prompt：
+
+`"參考這份Markdown，將以下資訊更新進去原本的文件並且用程式碼區塊的形式貼出新的Markdown文件；務必確保更新後的文章不會被Render可以直接複製貼上到.md中呈現"`
+
+[Markdown預覽網站](https://markdownlivepreview.com/) 檢查完沒問題就可以貼到Googlesheet對應欄位。
+</details>
 
 ## 📜 License
 MIT License. Will be free for all Taiwanese Student Associations.

@@ -76,6 +76,15 @@ export const guideData: GuideCategory[] = [
       { title: "退租、除籍與關帳手續", path: "/guide/leaving-ghent" },
       { title: "學歷/工作證明文件驗證", path: "/guide/document-auth" },
     ]
+  },
+  { 
+    category: "🧘 身心靈區", // 第 6 個項目，完美對稱
+    items: [
+      { title: "🙏", path: "/guide/faith/muyu" },
+      { title: "🌀", path: "/guide/faith/wheel" },
+      { title: "🕯️", path: "/guide/faith/Tao" },
+      { title: "🟢", path: "/guide/faith/kuaikuai" },
+    ]
   }
 ];
 

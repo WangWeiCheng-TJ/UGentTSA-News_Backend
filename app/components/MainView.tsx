@@ -65,8 +65,9 @@ const GuideView = () => {
         <p className="text-gray-400 text-xs">從落地到離開的全攻略。</p>
       </div>
 
-      <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm py-2">
-        <div className="grid grid-cols-3 gap-1.5 px-3">
+      <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm py-3">
+        {/* 6 個項目用 3 列排版，視覺上最穩重 */}
+        <div className="grid grid-cols-3 gap-2 px-4">
           {guideData.map((section, idx) => {
             // 簡單的字串處理：把第一個 Emoji 抓出來，跟文字分開
             const match = section.category.match(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])\s*(.*)/);
@@ -89,37 +90,55 @@ const GuideView = () => {
         </div>
       </div>
 
+
+
       {/* 3. 指南列表內容 */}
       <div className="px-4 mt-6 space-y-10">
-        {guideData.map((section, idx) => (
-          <div 
-            key={idx} 
-            id={`guide-section-${idx}`} 
-            className="space-y-3"
-          >
-            {/* 分類標題 */}
-            <h3 className="text-lg font-bold text-blue-600 flex items-center gap-2">
-              <span className="w-1.5 h-5 bg-blue-600 rounded-full"></span>
-              {section.category}
-            </h3>
-            
-            {/* 該分類下的文章 (維持 Grid 顯示) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {section.items.map((item, itemIdx) => (
-                <Link 
-                  key={itemIdx} 
-                  href={item.path}
-                  className="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border border-gray-100 active:scale-95 transition-transform hover:shadow-md hover:border-blue-200 group"
-                >
-                  <span className="text-gray-700 font-medium text-sm group-hover:text-blue-700 transition-colors">
-                    {item.title}
-                  </span>
-                  <ChevronRight size={16} className="text-gray-300 group-hover:text-blue-400" />
-                </Link>
-              ))}
+        {guideData.map((section, idx) => {
+          // 判斷是否為身心靈區
+          const isFaithSection = section.category.includes("身心靈");
+
+          return (
+            <div key={idx} id={`guide-section-${idx}`} className="space-y-3">
+              {/* 分類標題 */}
+              <h3 className="text-lg font-bold text-blue-600 flex items-center gap-2">
+                <span className="w-1.5 h-5 bg-blue-600 rounded-full"></span>
+                {section.category}
+              </h3>
+              
+              {/* 判斷佈局：如果是身心靈區，用大方塊置中；否則用一般的清單 */}
+              {isFaithSection ? (
+                <div className="grid grid-cols-4 gap-4 max-w-[280px] mx-auto py-4">
+                  {section.items.map((item, itemIdx) => (
+                    <Link 
+                      key={itemIdx} 
+                      href={item.path}
+                      className="aspect-square flex items-center justify-center bg-white rounded-3xl shadow-sm border border-gray-100 active:scale-90 transition-all text-4xl hover:shadow-md hover:border-blue-200"
+                    >
+                      {item.title}
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                /* 原本的清單佈局 */
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {section.items.map((item, itemIdx) => (
+                    <Link 
+                      key={itemIdx} 
+                      href={item.path}
+                      className="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border border-gray-100 active:scale-95 transition-transform hover:shadow-md hover:border-blue-200 group"
+                    >
+                      <span className="text-gray-700 font-medium text-sm group-hover:text-blue-700">
+                        {item.title}
+                      </span>
+                      <ChevronRight size={16} className="text-gray-300 group-hover:text-blue-400" />
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* 4. 回到頂部懸浮按鈕 */}
@@ -196,7 +215,7 @@ export default function MainView({
               {/* 左邊：Logo */}
               <div className="w-9 h-9 relative flex-shrink-0 overflow-hidden rounded-full border border-gray-100 shadow-sm">
                 <Image 
-                  src="/logo_v3.png" 
+                  src="/imgs/logo_v3.png" 
                   alt="TSA Logo"
                   fill
                   className="object-cover"

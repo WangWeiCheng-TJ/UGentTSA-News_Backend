@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"; // 👈 引入 Viewport
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,6 +48,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        {/* 👇 2. 塞在這裡，它就會自動追蹤所有頁面 */}
+        <Analytics />
       </body>
     </html>
   );

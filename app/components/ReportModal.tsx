@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { X, Mail, FileText, AlertTriangle } from "lucide-react"; // 記得引入這些 icon
+import { X, Mail, FileText, AlertTriangle, ListTodo } from "lucide-react"; // 記得引入這些 icon
 
 type Props = {
   onClose: () => void;
@@ -39,7 +39,7 @@ export default function ReportModal({ onClose }: Props) {
           
           {/* A. 聯絡 Email */}
           <a 
-            href="mailto:ghent.tsa@gmail.com?subject=[TSA App] 聯絡事項"
+            href="mailto:ghent.tsa@gmail.com?cc=tienjiwang@gmail.com&subject=[TSA App] 意見回饋"
             className="bg-gray-50 border border-gray-100 p-4 rounded-xl flex flex-col items-center justify-center gap-2 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600 transition-all active:scale-95 text-center group"
           >
             <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-400 shadow-sm group-hover:text-blue-600 transition-colors">
@@ -65,6 +65,15 @@ export default function ReportModal({ onClose }: Props) {
               <div className="font-bold text-gray-700 text-xs group-hover:text-green-700">問題回報</div>
               <div className="text-[10px] text-gray-400">Google Form</div>
             </div>
+          </a>
+
+          <a 
+            href="https://mangrove-sandal-8ce.notion.site/2de3679245b180359fdfc15be91d9375?v=2de3679245b180ce9420000c14bf5050&source=copy_link" 
+            target="_blank" // 確保會跳出瀏覽器開啟
+            className="flex items-center gap-2 text-blue-600 font-bold"
+            >
+            <ListTodo size={18} />
+            查看功能開發進度 (許願池)
           </a>
 
         </div>

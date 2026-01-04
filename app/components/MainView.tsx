@@ -20,7 +20,9 @@ import {
   Bell, 
   Info,
   Mail,     // 聯絡按鈕用
-  FileText  // 回報表單用
+  FileText,  // 回報表單用
+  ArrowUp, // 👈 新增：回到頂部箭頭
+  Hash,     // 👈 新增：目錄圖示
 } from "lucide-react";
 
 // === 定義資料型態 ===
@@ -35,39 +37,113 @@ export type NewsItem = {
   Source_URL: string;
 };
 
-// === 子組件: 指南頁面 (GuideView) ===
-const GuideView = () => (
-  <div className="flex flex-col w-full pb-24 px-4 pt-6 space-y-6">
-    <div className="text-center space-y-2">
-      <h2 className="text-2xl font-bold text-gray-800">生存指南 🧭</h2>
-      <p className="text-gray-500 text-sm">從落地到離開的全攻略。</p>
-    </div>
 
-    <div className="space-y-6">
-      {guideData.map((section, idx) => (
-        <div key={idx} className="space-y-3">
-          <h3 className="text-lg font-bold text-blue-600 flex items-center gap-2">
-            <span className="w-1 h-5 bg-blue-600 rounded-full"></span>
-            {section.category}
-          </h3>
-          {/* 響應式 Grid: 手機單欄，電腦雙欄 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {section.items.map((item, itemIdx) => (
-              <Link 
-                key={itemIdx} 
-                href={item.path}
-                className="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border border-gray-100 active:scale-95 transition-transform hover:shadow-md"
+// === 子組件: 指南頁面 (GuideView) ===
+const GuideView = () => {
+  // 處理滾動到指定區塊
+  const scrollToSection = (index: number) => {
+    const element = document.getElementById(`guide-section-${index}`);
+    if (element) {
+      // 如果你有兩排導航，這個數字要設到 130 左右才不會擋到
+      const offset = 130; 
+      const y = element.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  };
+
+  // 處理回到頂部
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return (
+    <div className="flex flex-col w-full pb-32 min-h-screen relative bg-white">
+      
+      {/* 1. 頁面標題區 (這個會隨著滾動被捲走) */}
+      <div className="pt-6 px-4 pb-4 text-center space-y-1 bg-white">
+        <h2 className="text-2xl font-bold text-gray-800">生存指南 🧭</h2>
+        <p className="text-gray-400 text-xs">從落地到離開的全攻略。</p>
+      </div>
+
+      <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm py-2">
+        <div className="grid grid-cols-3 gap-1.5 px-3">
+          {guideData.map((section, idx) => {
+            // 簡單的字串處理：把第一個 Emoji 抓出來，跟文字分開
+            const match = section.category.match(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])\s*(.*)/);
+            const emoji = match ? match[1] : "📍";
+            const label = match ? match[2] : section.category;
+
+            return (
+              <button
+                key={idx}
+                onClick={() => scrollToSection(idx)}
+                className="flex flex-col items-center justify-center bg-white hover:bg-blue-50 py-1.5 rounded-lg border border-gray-100 shadow-sm transition-all active:scale-95"
               >
-                <span className="text-gray-700 font-medium">{item.title}</span>
-                <ChevronRight size={18} className="text-gray-400" />
-              </Link>
-            ))}
-          </div>
+                <span className="text-base mb-0.5">{emoji}</span>
+                <span className="text-[10px] font-bold text-gray-600 leading-tight text-center px-1">
+                  {label.split(' (')[0]} {/* 這裡偷吃步：如果太長，只顯示中文，括號英文省略 */}
+                </span>
+              </button>
+            );
+          })}
         </div>
-      ))}
+      </div>
+
+      {/* 3. 指南列表內容 */}
+      <div className="px-4 mt-6 space-y-10">
+        {guideData.map((section, idx) => (
+          <div 
+            key={idx} 
+            id={`guide-section-${idx}`} 
+            className="space-y-3"
+          >
+            {/* 分類標題 */}
+            <h3 className="text-lg font-bold text-blue-600 flex items-center gap-2">
+              <span className="w-1.5 h-5 bg-blue-600 rounded-full"></span>
+              {section.category}
+            </h3>
+            
+            {/* 該分類下的文章 (維持 Grid 顯示) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {section.items.map((item, itemIdx) => (
+                <Link 
+                  key={itemIdx} 
+                  href={item.path}
+                  className="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border border-gray-100 active:scale-95 transition-transform hover:shadow-md hover:border-blue-200 group"
+                >
+                  <span className="text-gray-700 font-medium text-sm group-hover:text-blue-700 transition-colors">
+                    {item.title}
+                  </span>
+                  <ChevronRight size={16} className="text-gray-300 group-hover:text-blue-400" />
+                </Link>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* 4. 回到頂部懸浮按鈕 */}
+      <button
+        onClick={scrollToTop}
+        className="fixed bottom-24 right-5 z-40 bg-white/90 backdrop-blur text-gray-500 p-2.5 rounded-full shadow-lg border border-gray-200 hover:bg-blue-600 hover:text-white transition-all active:scale-90"
+        aria-label="Back to top"
+      >
+        <ArrowUp size={20} />
+      </button>
+
+      {/* 隱藏 Scrollbar 的 CSS (可以寫在 globals.css，或者直接用 inline style 簡單處理) */}
+      <style jsx>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </div>
-  </div>
-);
+  );
+};
 
 // === 主組件: MainView ===
 export default function MainView({ 

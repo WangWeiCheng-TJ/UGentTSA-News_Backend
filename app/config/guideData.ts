@@ -19,39 +19,62 @@ export type AppLink = {
 };
 
 // 2. 指南選單資料 (Sidebar/Menu Data)
-// 這裡就是你剛剛提供的資料，我已經幫你加上型別宣告了
 export const guideData: GuideCategory[] = [
   {
-    category: "🌱 初來乍到 (Arrival)",
+    category: "🌱 抵達安頓",
+    // 目標：所有剛到根特的人 (不分身份)
     items: [
       { title: "行前文件準備", path: "/guide/departure-prep" },
-      { title: "To帶 or not to帶(tbd)", path: "/guide/departure-luggage" },
-      { title: "如何來根特", path: "/guide/transport-to-ghent" },
-      { title: "居留證篇", path: "/guide/residence-permit" },
-      { title: "住宿篇", path: "/guide/housing" },
-      { title: "電信與網路(tbd)", path: "/guide/telecom" },
-      { title: "銀行開戶", path: "/guide/banking" },
-      { title: "ESN 學生組織(tbd)", path: "/guide/esn" }
+      { title: "行李清單：To帶 or not to帶？", path: "/guide/departure-luggage" },
+      { title: "交通：如何來到根特", path: "/guide/transport-to-ghent" },
+      { title: "初次辦理居留證", path: "/guide/residence-permit" },
+      { title: "住宿搜尋與簽約", path: "/guide/housing" },
+      { title: "銀行開戶與保險", path: "/guide/banking" },
+      { title: "電信與網路", path: "/guide/telecom" },
     ]
   },
   {
-    category: "🚲 日常生活 (Daily Life)",
+    category: "🏠 根特生活",
+    // 目標：全體在根特台灣人 (通用資訊)
     items: [
-      { title: "延長居留", path: "/guide/visa-extend" },
-      { title: "變更地址", path: "/guide/change-address" },
-      { title: "好康相報 (tbd)", path: "/guide/deals" },
-      { title: "交通篇 (tbd)", path: "/guide/transport-city" },
-      { title: "健保與醫療 (tbd)", path: "/guide/healthcare" },
-      { title: "網購與包裹 (tbd)", path: "/guide/online-shopping" },
-      { title: "超市攻略 (tbd)", path: "/guide/supermarkets" },
-      { title: "實用 App 清單 ", path: "/guide/apps" },
-      { title: "其他行政手續 (tbd)", path: "/guide/documents" },      
+      { title: "交通：市區公車與火車", path: "/guide/transport-city" },
+      { title: "健保、家醫與醫療", path: "/guide/healthcare" },
+      { title: "垃圾分類與回收指南", path: "/guide/waste-collection" }, // 建議新增
+      { title: "超市攻略與省錢妙招", path: "/guide/supermarkets" },
+      { title: "網購、包裹與退貨", path: "/guide/online-shopping" },
+      { title: "變更地址 (Change of Address)", path: "/guide/change-address" },
+      { title: "實用 App 清單", path: "/guide/apps" },
+      { title: "好康優惠 (Deals)", path: "/guide/deals" },
     ]
   },
   {
-    category: "👋 回台灣囉 (Departure)",
+    category: "🎓 校園專區",
+    // 目標：專屬學生 (含在職生、博班)
     items: [
-      { title: "必要手續 (tbd)", path: "/guide/leaving-ghent" }
+      { title: "UGent 學生系統手冊", path: "/guide/ugent-systems" },
+      { title: "學生餐廳 (Resto) 資訊", path: "/guide/resto" },
+      { title: "學生工作 (Student Job) 規定", path: "/guide/student-job" },
+      { title: "延長學生居留證", path: "/guide/visa-extend" },
+      { title: "ESN 學生組織", path: "/guide/esn" },
+    ]
+  },
+  {
+    category: "💼 職場轉換",
+    // 目標：畢業生、求職者、上班族
+    items: [
+      { title: "找工作與實習資源", path: "/guide/job-search" },
+      { title: "求職假 (Orientation Year)", path: "/guide/search-year" }, // 畢業生必看
+      { title: "工作證辦理 (Single Permit)", path: "/guide/work-permit" },
+      { title: "比利時報稅懶人包", path: "/guide/tax-return" },
+      { title: "轉換身分行政手續", path: "/guide/change-status" },
+    ]
+  },
+  {
+    category: "✈️ 歸國手續",
+    // 目標：結束階段的人
+    items: [
+      { title: "退租、除籍與關帳手續", path: "/guide/leaving-ghent" },
+      { title: "學歷/工作證明文件驗證", path: "/guide/document-auth" },
     ]
   }
 ];

@@ -23,7 +23,7 @@ export default function NewsFeed({ newsData }: { newsData: NewsItem[] }) {
 
   return (
     <>
-      <div className="w-full max-w-md space-y-4">
+      <div className="w-full space-y-4">
         {displayNews.map((news, index) => (
           <div
             key={index}

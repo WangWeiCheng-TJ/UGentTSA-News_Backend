@@ -1,26 +1,27 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+
+// 引入元件
 import BottomNav from "@/components/BottomNav";
 import NewsFeed from "@/components/NewsFeed";
 import NewsDetailModal from "@/components/NewsDetailModal";
-// 引入剛剛建立的資料
-import { guideData, AppLink } from "@/config/guideData"; 
 import PortalView from "@/components/PortalView";
-import { 
-  MapPin, 
-  BookOpen, 
-  ExternalLink, 
-  Phone, 
-  ChevronRight, 
-  AlertTriangle, // 👈 補上這個
-  Bell           // 👈 還有這個
-} from "lucide-react";
-import Link from "next/link";
+import AboutModal from "@/components/AboutModal";
+import ReportModal from "@/components/ReportModal";
+import { guideData } from "@/config/guideData"; 
 
-import { Info } from "lucide-react"; // 記得引入 Info
-import AboutModal from "@/components/AboutModal"; // for setting/about
-import Image from "next/image"; // 👈 記得加這行
+// 引入圖示
+import { 
+  ChevronRight, 
+  AlertTriangle, 
+  Bell, 
+  Info,
+  Mail,     // 聯絡按鈕用
+  FileText  // 回報表單用
+} from "lucide-react";
 
 // === 定義資料型態 ===
 export type NewsItem = {
@@ -34,7 +35,7 @@ export type NewsItem = {
   Source_URL: string;
 };
 
-// === 1. 指南頁面 (GuideView) ===
+// === 子組件: 指南頁面 (GuideView) ===
 const GuideView = () => (
   <div className="flex flex-col w-full pb-24 px-4 pt-6 space-y-6">
     <div className="text-center space-y-2">
@@ -49,7 +50,8 @@ const GuideView = () => (
             <span className="w-1 h-5 bg-blue-600 rounded-full"></span>
             {section.category}
           </h3>
-          <div className="grid grid-cols-1 gap-3">
+          {/* 響應式 Grid: 手機單欄，電腦雙欄 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {section.items.map((item, itemIdx) => (
               <Link 
                 key={itemIdx} 
@@ -67,73 +69,67 @@ const GuideView = () => (
   </div>
 );
 
-
-// === 主介面組件 ===
-// 👇👇👇 關鍵修改在這邊 👇👇👇
+// === 主組件: MainView ===
 export default function MainView({ 
   initialNewsData, 
-  initialTab = "home" // 1. 設定預設值為 home
+  initialTab = "home" 
 }: { 
   initialNewsData: NewsItem[], 
-  initialTab?: string // 2. 新增這個型別定義
+  initialTab?: string 
 }) {
   
-  // 3. 使用 initialTab 來初始化狀態
-  // 這樣當 URL 是 /?tab=guide 時，currentTab 就會變成 "guide"
+  // --- 狀態管理 ---
   const [currentTab, setCurrentTab] = useState(initialTab);
-  // 2. 👇 新增這段 useEffect：讀取記憶 👇
+  const [selectedAlert, setSelectedAlert] = useState<NewsItem | null>(null); // 控制新聞詳情彈窗
+  const [showAbout, setShowAbout] = useState(false); // 控制關於本站彈窗
+  const [showReport, setShowReport] = useState(false);
+
+  // --- 記憶分頁功能 (localStorage) ---
   useEffect(() => {
-    // 只有當 initialTab 是預設值 "home" 時，我們才去讀取 localStorage
-    // 這樣如果使用者是點了分享連結進來 (e.g. ?tab=guide)，就不會被蓋掉
     if (initialTab === "home") {
       const savedTab = localStorage.getItem("tsa_active_tab");
       if (savedTab) {
         setCurrentTab(savedTab);
       }
     } else {
-      // 如果使用者是從特定連結進來，我們把那個連結存起來
       localStorage.setItem("tsa_active_tab", initialTab);
     }
   }, [initialTab]); 
 
-  // 3. 👇 修改切換函式：加入存檔功能 👇
   const handleTabChange = (tab: string) => {
     setCurrentTab(tab);
-    localStorage.setItem("tsa_active_tab", tab); // 記住這個選擇！
+    localStorage.setItem("tsa_active_tab", tab);
   };
 
-  // for 緊急訊息
-  const [selectedAlert, setSelectedAlert] = useState<NewsItem | null>(null);
-  // for about
-  const [showAbout, setShowAbout] = useState(false);
-
-  // 1️⃣ 邏輯處理：把新聞分成三級
-  // 注意：Google Sheets 抓下來的 Level 可能是數字或字串，建議轉字串比對比較保險
+  // --- 新聞資料分級處理 ---
+  // Level 3: 紅色警戒 (緊急)
   const redAlerts = initialNewsData.filter(item => String(item.Level) === "3");
+  // Level 2: 藍色置頂 (重要)
   const pinnedNews = initialNewsData.filter(item => String(item.Level) === "2");
-  const normalNews = initialNewsData.filter(item => String(item.Level) === "1" || !item.Level); // Level 1 或沒填的
+  // Level 1: 一般動態
+  const normalNews = initialNewsData.filter(item => String(item.Level) === "1" || !item.Level);
   
   return (
-    <>
-      <div className="min-h-screen bg-gray-50">
-        {/* --- 1. 首頁 (News) --- */}
-        {currentTab === "home" && (
-          <div className="flex flex-col items-center py-8 px-4 pb-24">
-            {/* Header 修改 */}
-            <div className="w-full bg-white px-4 py-4 border-b border-gray-100 mb-4 shadow-sm sticky top-0 z-10 flex justify-between items-center">
-               {/* 左邊：Logo */}
-                <div className="w-9 h-9 relative flex-shrink-0 overflow-hidden rounded-full border border-gray-100 shadow-sm">
-                  <Image 
-                    src="/logo_v3.png"   // 👈 確保 public 資料夾裡有這張圖
-                    alt="TSA Logo"
-                    fill              // 讓圖片填滿這個 w-9 h-9 的框框
-                    className="object-cover" // 或是用 object-contain (看你圖片比例)
-                    sizes="36px"
-                  />
-                </div>
+    <div className="bg-gray-50 min-h-screen flex flex-col items-center">
+      
+      {/* --- 1. Header (只在首頁顯示) --- */}
+      {currentTab === "home" && (
+        <div className="w-full bg-white border-b border-gray-100 shadow-sm sticky top-0 z-30">
+           {/* 限制 Header 寬度與 Main 一致 */}
+           <div className="w-full md:max-w-2xl mx-auto px-4 py-3 flex justify-between items-center">
+              {/* 左邊：Logo */}
+              <div className="w-9 h-9 relative flex-shrink-0 overflow-hidden rounded-full border border-gray-100 shadow-sm">
+                <Image 
+                  src="/logo_v3.png" 
+                  alt="TSA Logo"
+                  fill
+                  className="object-cover"
+                  sizes="36px"
+                />
+              </div>
 
-               {/* 中間：標題 */}
-               <div className="text-center">
+              {/* 中間：標題 */}
+              <div className="text-center">
                 <h1 className="text-xl font-bold text-gray-900">根特生存指南</h1>
                 <div className="flex items-center justify-center gap-2 mt-0.5">
                   <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
@@ -141,38 +137,44 @@ export default function MainView({
                 </div>
               </div>
 
-              {/* 右邊：About 按鈕 */}
+              {/* 右邊：About 按鈕 (包含免責、版本、GitHub) */}
               <button 
                 onClick={() => setShowAbout(true)}
                 className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
               >
                 <Info size={20} />
               </button>
-            </div>
-            <div className="w-full max-w-md px-4 space-y-6">
-              {/* 🔴 Level 3: 紅色警戒區 (有資料才顯示) */}
+           </div>
+        </div>
+      )}
+
+      {/* --- 2. 主要內容區塊 (響應式寬度 md:max-w-2xl) --- */}
+      <main className="w-full md:max-w-2xl bg-white min-h-screen shadow-lg relative flex flex-col transition-all duration-300">
+        
+        {/* === HOME 分頁 === */}
+        {currentTab === "home" && (
+          <div className="flex flex-col py-6 px-4 pb-24 flex-1">
+            
+            <div className="space-y-6">
+              {/* 🔴 Level 3: 紅色警戒區 */}
               {redAlerts.length > 0 && (
                 <div className="space-y-3">
                   {redAlerts.map((alert, idx) => (
                     <div key={idx} 
-                    onClick={() => setSelectedAlert(alert)}
-                    className="bg-red-500 text-white p-4 rounded-xl shadow-lg flex gap-3 animate-pulse cursor-pointer hover:shadow-md transition-all active:scale-95">
+                      onClick={() => setSelectedAlert(alert)}
+                      className="bg-red-500 text-white p-4 rounded-xl shadow-lg flex gap-3 animate-pulse cursor-pointer hover:shadow-md transition-all active:scale-95"
+                    >
                       <AlertTriangle className="shrink-0" size={24} />
                       <div>
                         <h3 className="font-bold text-lg leading-tight">{alert.Title}</h3>
                         <p className="text-red-50 text-sm mt-1">{alert.Summary}</p>
-                        {alert.Source_URL && (
-                          <a href={alert.Source_URL} target="_blank" className="inline-block mt-2 text-xs bg-white/20 px-2 py-1 rounded hover:bg-white/30 transition">
-                            查看詳情 →
-                          </a>
-                        )}
                       </div>
                     </div>
                   ))}
                 </div>
               )}
 
-              {/* 🟡 Level 2: 置頂消息區 (有資料才顯示) */}
+              {/* 🟡 Level 2: 置頂消息區 */}
               {pinnedNews.length > 0 && (
                 <div className="space-y-2">
                   <h2 className="text-sm font-bold text-gray-400 ml-1 uppercase tracking-wider flex items-center gap-1">
@@ -180,8 +182,8 @@ export default function MainView({
                   </h2>
                   {pinnedNews.map((news, idx) => (
                     <div key={idx} 
-                    onClick={() => setSelectedAlert(news)}
-                    className="bg-blue-50 border border-blue-100 p-4 rounded-xl shadow-sm cursor-pointer hover:shadow-md hover:bg-blue-100/50 transition-all active:scale-95"
+                      onClick={() => setSelectedAlert(news)}
+                      className="bg-blue-50 border border-blue-100 p-4 rounded-xl shadow-sm cursor-pointer hover:shadow-md hover:bg-blue-100/50 transition-all active:scale-95"
                     >
                       <div className="flex justify-between items-start mb-1">
                         <span className="bg-blue-200 text-blue-700 text-[10px] px-2 py-0.5 rounded-full font-bold">
@@ -192,43 +194,53 @@ export default function MainView({
                       <h3 className="font-bold text-gray-800 text-lg">{news.Title}</h3>
                       <p className="text-gray-600 text-sm mt-1 line-clamp-2">{news.Summary}</p>
                       {news.Action && (
-                         <div className="mt-3 pt-3 border-t border-blue-100 text-blue-600 text-sm font-medium flex items-center gap-1">
-                           {news.Action} <ChevronRight size={14} />
-                         </div>
+                          <div className="mt-3 pt-3 border-t border-blue-100 text-blue-600 text-sm font-medium flex items-center gap-1">
+                            {news.Action} <ChevronRight size={14} />
+                          </div>
                       )}
                     </div>
                   ))}
                 </div>
               )}
 
-              {/* ⚪ Level 1: 一般動態 (原本的 Feed) */}
+              {/* ⚪ Level 1: 一般動態 */}
               <div className="space-y-2">
-                <h2 className="text-sm font-bold text-gray-400 ml-1 uppercase tracking-wider cursor-pointer hover:shadow-md transition-all active:scale-95">
-                   Latest Feed
-                </h2>
-                {/* 這裡直接用原本的 NewsFeed，但只傳入一般新聞 */}
+                <h2 className="text-sm font-bold text-gray-400 ml-1 uppercase tracking-wider">Latest Feed</h2>
                 <NewsFeed newsData={normalNews} />
               </div>
-
             </div>
+
+
+            {/* 簡單 Footer (版權宣告) */}
+            <div className="mt-8 pt-6 border-t border-gray-100 text-center pb-4 text-[10px] text-gray-300">
+              © 2026 UGent TSA. All rights reserved.
+            </div>
+
           </div>
         )}
 
-        {/* --- 2. 指南 (Guide) --- */}
+        {/* === 其他分頁 (Guide / Portal) === */}
         {currentTab === "guide" && <GuideView />}
-
-        {/* --- 3. 傳送門 (Portal) --- */}
         {currentTab === "portal" && <PortalView />} 
-      </div>
+      
+      </main>
 
-      <BottomNav currentTab={currentTab} onTabChange={handleTabChange} />
+      {/* --- 3. 底部導航 --- */}
+      <BottomNav 
+        currentTab={currentTab} 
+        onTabChange={handleTabChange} 
+        onReportClick={() => setShowReport(true)} // 👈 這裡把開關接上去！
+      />
 
-      {/* About Modal */}
-      {showAbout && (
-        <AboutModal onClose={() => setShowAbout(false)} />
-      )}
+      {/* --- 4. 彈窗組件 --- */}
+      
+      {/* 關於本站 */}
+      {showAbout && <AboutModal onClose={() => setShowAbout(false)} />}
+      
+      {/* 回報彈窗 (綁定 showReport) */}
+      {showReport && <ReportModal onClose={() => setShowReport(false)} />}
 
-      {/* Alert Modal */}
+      {/* 新聞詳情 */}
       {selectedAlert && (
         <NewsDetailModal 
           news={selectedAlert} 
@@ -236,6 +248,6 @@ export default function MainView({
         />
       )}
 
-    </>
+    </div>
   );
 }

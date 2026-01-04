@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { execSync } from "child_process";
 
 // 引入 PWA 套件
 const withPWA = require("@ducanh2912/next-pwa").default({
@@ -14,9 +15,24 @@ const withPWA = require("@ducanh2912/next-pwa").default({
   },
 });
 
+// 🔥 自動抓取 Git Commit Hash
+let gitCommitHash = "dev";
+try {
+  // 嘗試抓取最新的 short hash (例如: a1b2c3d)
+  gitCommitHash = execSync('git rev-parse --short HEAD').toString().trim();
+} catch (e) {
+  console.warn("無法抓取 Git Hash，可能未安裝 Git 或非 Git 倉庫");
+}
+
+// 🔥 抓取 package.json 的版本號 (例如: 1.0.0)
+const packageJson = require('./package.json');
+
 const nextConfig: NextConfig = {
-  // 你的其他設定 (如果有的話)
+  // 把抓到的資訊塞進環境變數，讓前端 (AboutModal) 讀得到
+  env: {
+    NEXT_PUBLIC_APP_VERSION: packageJson.version,
+    NEXT_PUBLIC_GIT_HASH: gitCommitHash,
+  },
 };
 
-// 用 withPWA 把設定包起來
 export default withPWA(nextConfig);

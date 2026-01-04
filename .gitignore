@@ -21,6 +21,7 @@ venv/
 .venv/
 env/
 .python-version
+docs
 
 # 安裝套件的暫存
 pip-wheel-metadata/

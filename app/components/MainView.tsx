@@ -5,7 +5,7 @@ import BottomNav from "@/components/BottomNav";
 import NewsFeed from "@/components/NewsFeed";
 import NewsDetailModal from "@/components/NewsDetailModal";
 // 引入剛剛建立的資料
-import { guideData, appLinks } from "@/config/guideData"; 
+import { guideData, AppLink } from "@/config/guideData"; 
 import PortalView from "@/components/PortalView";
 import { 
   MapPin, 

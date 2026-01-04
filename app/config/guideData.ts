@@ -24,9 +24,10 @@ export const guideData: GuideCategory[] = [
   {
     category: "🌱 初來乍到 (Arrival)",
     items: [
-      { title: "要出發啦(tbd)", path: "/guide/departure-prep" },
+      { title: "行前文件準備", path: "/guide/departure-prep" },
+      { title: "帶與不帶(tbd)", path: "/guide/departure-luggage" },
       { title: "如何來根特(tbd)", path: "/guide/transport-to-ghent" },
-      { title: "居留證篇 (市政廳)", path: "/guide/residence-permit" },
+      { title: "居留證篇", path: "/guide/residence-permit" },
       { title: "住宿篇 (tbd)", path: "/guide/housing" },
       { title: "電信與網路(tbd)", path: "/guide/telecom" },
       { title: "銀行開戶", path: "/guide/banking" },
@@ -36,7 +37,8 @@ export const guideData: GuideCategory[] = [
   {
     category: "🚲 日常生活 (Daily Life)",
     items: [
-      { title: "延長居留&變更地址(tbd)", path: "/guide/visa-address" },
+      { title: "延長居留", path: "/guide/visa-extend" },
+      { title: "變更地址", path: "/guide/change-address" },
       { title: "好康相報 (tbd)", path: "/guide/deals" },
       { title: "交通篇 (tbd)", path: "/guide/transport-city" },
       { title: "健保與醫療 (tbd)", path: "/guide/healthcare" },
@@ -54,11 +56,11 @@ export const guideData: GuideCategory[] = [
   }
 ];
 
-// 3. 傳送門 APP 連結 (Portal Data)
-// 這是 MainView 裡面的 "PortalView" 會用到的，記得要保留喔！
-export const appLinks: AppLink[] = [
-  { name: "SNCB 火車", url: "https://www.belgiantrain.be/", icon: "🚆", color: "bg-blue-100 text-blue-600" },
-  { name: "De Lijn 公車", url: "https://www.delijn.be/", icon: "🚌", color: "bg-yellow-100 text-yellow-600" },
-  { name: "Xtra (Colruyt)", url: "https://xtra.colruytgroup.be/", icon: "🛒", color: "bg-red-100 text-red-600" },
-  { name: "Joyn 集點", url: "https://www.joyn.be/", icon: "🎁", color: "bg-orange-100 text-orange-600" },
-];
+// // 3. 傳送門 APP 連結 (Portal Data)
+// // 這是 MainView 裡面的 "PortalView" 會用到的，記得要保留喔！
+// export const appLinks: AppLink[] = [
+//   { name: "SNCB 火車", url: "https://www.belgiantrain.be/", icon: "🚆", color: "bg-blue-100 text-blue-600" },
+//   { name: "De Lijn 公車", url: "https://www.delijn.be/", icon: "🚌", color: "bg-yellow-100 text-yellow-600" },
+//   { name: "Xtra (Colruyt)", url: "https://xtra.colruytgroup.be/", icon: "🛒", color: "bg-red-100 text-red-600" },
+//   { name: "Joyn 集點", url: "https://www.joyn.be/", icon: "🎁", color: "bg-orange-100 text-orange-600" },
+// ];

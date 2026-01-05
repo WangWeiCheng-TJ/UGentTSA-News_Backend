@@ -38,24 +38,25 @@ export const guideData: GuideCategory[] = [
     // 目標：全體在根特台灣人 (通用資訊)
     items: [
       { title: "交通：市區公車與火車", path: "/guide/transport-city" },
-      { title: "健保、家醫與醫療", path: "/guide/healthcare" },
+      { title: "健保", path: "/guide/healthcare" },
+      { title: "家醫與醫療", path: "/guide/medical" },
       { title: "垃圾分類與回收指南", path: "/guide/waste-collection" }, // 建議新增
       { title: "超市攻略與省錢妙招", path: "/guide/supermarkets" },
       { title: "網購、包裹與退貨", path: "/guide/online-shopping" },
-      { title: "變更地址 (Change of Address)", path: "/guide/change-address" },
+      { title: "變更地址", path: "/guide/change-address" },
       { title: "實用 App 清單", path: "/guide/apps" },
-      { title: "好康優惠 (Deals)", path: "/guide/deals" },
+      { title: "好康優惠", path: "/guide/deals" },
     ]
   },
   {
     category: "🎓 校園專區",
     // 目標：專屬學生 (含在職生、博班)
     items: [
-      { title: "UGent 學生系統手冊", path: "/guide/ugent-systems" },
-      { title: "學生餐廳 (Resto) 資訊", path: "/guide/resto" },
-      { title: "學生工作 (Student Job) 規定", path: "/guide/student-job" },
+      { title: "UGent資源", path: "/guide/ugent" },
+      // { title: "學生餐廳 (Resto) 資訊", path: "/guide/resto" },
+      { title: "學生工作規定", path: "/guide/student-job" },
       { title: "延長學生居留證", path: "/guide/visa-extend" },
-      { title: "ESN 學生組織", path: "/guide/esn" },
+      { title: "ESN 學生優惠", path: "/guide/esn" },
     ]
   },
   {
@@ -63,10 +64,10 @@ export const guideData: GuideCategory[] = [
     // 目標：畢業生、求職者、上班族
     items: [
       { title: "找工作與實習資源", path: "/guide/job-search" },
-      { title: "求職假 (Orientation Year)", path: "/guide/search-year" }, // 畢業生必看
-      { title: "工作證辦理 (Single Permit)", path: "/guide/work-permit" },
-      { title: "比利時報稅懶人包", path: "/guide/tax-return" },
+      { title: "求職簽證", path: "/guide/search-year" }, // 畢業生必看
+      { title: "工作證辦理", path: "/guide/work-permit" },
       { title: "轉換身分行政手續", path: "/guide/change-status" },
+      { title: "比利時報稅懶人包", path: "/guide/tax-return" },      
     ]
   },
   {
